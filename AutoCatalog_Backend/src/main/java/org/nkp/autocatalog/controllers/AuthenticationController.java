@@ -9,8 +9,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {

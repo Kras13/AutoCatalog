@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class CategoryController {
     @GetMapping("/fetch")
     public ResponseEntity<?> getAllCategories() {
         return ResponseEntity.ok("Endpoint reached...");
     }
+
+
 }
