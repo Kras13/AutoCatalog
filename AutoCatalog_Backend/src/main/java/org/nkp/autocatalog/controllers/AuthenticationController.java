@@ -22,18 +22,10 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @Valid @RequestBody RegisterRequest request,
-            BindingResult bindingResult) {
+            @Valid @RequestBody RegisterRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            var errors = bindingResult.getAllErrors();
-            var readableErrors = new ArrayList<String>();
-
-            for (var error: errors) {
-                readableErrors.add(error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(readableErrors);
+            return BaseController.FormatBadRequest(bindingResult);
         }
 
         return ResponseEntity.ok(service.register(request));
@@ -41,7 +33,12 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
-            @Valid @RequestBody AuthenticationRequest request) {
+            @Valid @RequestBody AuthenticationRequest request, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return BaseController.FormatBadRequest(bindingResult);
+        }
+
         try {
             return ResponseEntity.ok(service.authenticate(request));
         }
