@@ -1,4 +1,4 @@
-package org.nkp.autocatalog.models;
+package org.nkp.autocatalog.models.authentication;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

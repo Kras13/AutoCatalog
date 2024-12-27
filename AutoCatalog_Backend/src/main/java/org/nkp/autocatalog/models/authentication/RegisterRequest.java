@@ -1,9 +1,18 @@
-package org.nkp.autocatalog.models;
+package org.nkp.autocatalog.models.authentication;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class RegisterRequest {
+    @NotBlank(message = "Firstname is required!")
     private String firstName;
+    @NotBlank(message = "Lastname is required!")
     private String lastName;
+
+    @NotBlank(message = "Email is required!")
     private String email;
+
+    @Size(min = 3, message = "Password must be at least 3 characters")
     private String password;
 
     public RegisterRequest(String firstName, String lastName, String email, String password) {

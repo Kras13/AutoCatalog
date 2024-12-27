@@ -3,9 +3,9 @@ package org.nkp.autocatalog.services;
 import org.nkp.autocatalog.config.JwtService;
 import org.nkp.autocatalog.entities.Role;
 import org.nkp.autocatalog.entities.User;
-import org.nkp.autocatalog.models.AuthenticationRequest;
-import org.nkp.autocatalog.models.AuthenticationResponse;
-import org.nkp.autocatalog.models.RegisterRequest;
+import org.nkp.autocatalog.models.authentication.AuthenticationRequest;
+import org.nkp.autocatalog.models.authentication.AuthenticationResponse;
+import org.nkp.autocatalog.models.authentication.RegisterRequest;
 import org.nkp.autocatalog.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +32,7 @@ public class AuthenticationService {
                 request.getLastName(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
-                Role.USER);
+                Role.ADMIN);
 
         repository.save(user);
 

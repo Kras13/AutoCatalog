@@ -1,14 +1,18 @@
 package org.nkp.autocatalog.controllers;
 
-import org.nkp.autocatalog.models.AuthenticationRequest;
-import org.nkp.autocatalog.models.AuthenticationResponse;
-import org.nkp.autocatalog.models.RegisterRequest;
+import jakarta.validation.Valid;
+import org.nkp.autocatalog.models.authentication.AuthenticationRequest;
+import org.nkp.autocatalog.models.authentication.RegisterRequest;
 import org.nkp.autocatalog.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationService service;
 
@@ -18,16 +22,31 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @RequestBody RegisterRequest request
-    ) {
-//        return ResponseEntity.ok("Endpoint reached...");
+            @Valid @RequestBody RegisterRequest request,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            var errors = bindingResult.getAllErrors();
+            var readableErrors = new ArrayList<String>();
+
+            for (var error: errors) {
+                readableErrors.add(error.getDefaultMessage());
+            }
+
+            return ResponseEntity.badRequest().body(readableErrors);
+        }
 
         return ResponseEntity.ok(service.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public ResponseEntity<?> authenticate(
+            @Valid @RequestBody AuthenticationRequest request) {
+        try {
+            return ResponseEntity.ok(service.authenticate(request));
+        }
+        catch(BadCredentialsException e) {
+            return ResponseEntity.badRequest().body("User with such credentials does not exist");
+        }
     }
 }
