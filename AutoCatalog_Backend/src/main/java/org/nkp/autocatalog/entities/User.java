@@ -17,6 +17,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public User() {
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -59,7 +61,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-
         return true;
     }
 
