@@ -1,30 +1,29 @@
 package org.nkp.autocatalog.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.Set;
-
 @Entity
-@Table(name = "brands")
-public class Brand {
+@Table(name = "models")
+public class Model {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "brand")
-    private Set<Model> models;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    @JsonBackReference
+    private Brand brand;
 
-    public Brand() {
+    public Model() {
     }
 
-    public Brand(String name, Set<Model> models) {
+    public Model(String name, Brand brand) {
         this.name = name;
-        this.models = models;
+        this.brand = brand;
     }
 
     public Long getId() {
@@ -41,5 +40,13 @@ public class Brand {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 }

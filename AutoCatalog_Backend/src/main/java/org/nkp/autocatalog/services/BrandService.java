@@ -6,6 +6,7 @@ import org.nkp.autocatalog.models.brands.BrandModel;
 import org.nkp.autocatalog.repositories.BrandRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ public class BrandService {
             throw new IllegalArgumentException("Brand with such name already exists");
         }
 
-        var savedBrand = brandRepository.save(new Brand(model.getName()));
+        var savedBrand = brandRepository.save(new Brand(model.getName(), new HashSet<>()));
 
         return new BrandModel(savedBrand.getId(), savedBrand.getName());
     }
