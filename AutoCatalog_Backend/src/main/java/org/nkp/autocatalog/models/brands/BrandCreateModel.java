@@ -1,8 +1,8 @@
-package org.nkp.autocatalog.models.categories;
+package org.nkp.autocatalog.models.brands;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class CreateCategoryModel {
+public class BrandCreateModel {
     @NotBlank(message = "Name is required!")
     private String name;
 

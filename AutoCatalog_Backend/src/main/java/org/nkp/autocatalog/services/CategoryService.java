@@ -2,10 +2,9 @@ package org.nkp.autocatalog.services;
 
 import org.nkp.autocatalog.entities.Category;
 import org.nkp.autocatalog.models.categories.CategoryModel;
-import org.nkp.autocatalog.models.categories.CreateCategoryModel;
+import org.nkp.autocatalog.models.categories.CategoryCreateModel;
 import org.nkp.autocatalog.models.categories.EditCategoryModel;
 import org.nkp.autocatalog.repositories.CategoryRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public CategoryModel create(CreateCategoryModel model) {
+    public CategoryModel create(CategoryCreateModel model) {
         if (categoryRepository.findByName(model.getName()).isPresent()) {
             throw new IllegalArgumentException("Category with such name already exists");
         }

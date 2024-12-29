@@ -1,11 +1,7 @@
-package org.nkp.autocatalog.models.categories;
+package org.nkp.autocatalog.models.brands;
 
-import jakarta.validation.constraints.NotBlank;
-
-public class EditCategoryModel {
+public class BrandModel {
     private Long id;
-
-    @NotBlank(message = "Name is required!")
     private String name;
 
     public Long getId() {
@@ -23,4 +19,10 @@ public class EditCategoryModel {
     public void setName(String name) {
         this.name = name;
     }
+
+    public BrandModel(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
 }

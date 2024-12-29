@@ -1,12 +1,13 @@
-package org.nkp.autocatalog.models.categories;
+package org.nkp.autocatalog.models.fuels;
 
-import jakarta.validation.constraints.NotBlank;
-
-public class EditCategoryModel {
+public class FuelModel {
     private Long id;
-
-    @NotBlank(message = "Name is required!")
     private String name;
+
+    public FuelModel(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

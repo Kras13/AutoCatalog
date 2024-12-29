@@ -1,20 +1,10 @@
-package org.nkp.autocatalog.models.categories;
+package org.nkp.autocatalog.models.transmissions;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class EditCategoryModel {
-    private Long id;
-
+public class TransmissionCreateModel {
     @NotBlank(message = "Name is required!")
     private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

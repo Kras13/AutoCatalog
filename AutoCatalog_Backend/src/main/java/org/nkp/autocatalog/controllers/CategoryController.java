@@ -2,7 +2,7 @@ package org.nkp.autocatalog.controllers;
 
 import jakarta.validation.Valid;
 import org.nkp.autocatalog.models.categories.CategoryModel;
-import org.nkp.autocatalog.models.categories.CreateCategoryModel;
+import org.nkp.autocatalog.models.categories.CategoryCreateModel;
 import org.nkp.autocatalog.models.categories.EditCategoryModel;
 import org.nkp.autocatalog.services.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/category")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class CategoryController {
-
     private final CategoryService service;
 
     public CategoryController(CategoryService service) {
@@ -30,14 +29,14 @@ public class CategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createCategory(
-            @Valid @RequestBody CreateCategoryModel model, BindingResult bindingResult) {
+            @Valid @RequestBody CategoryCreateModel model, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return BaseController.FormatBadRequest(bindingResult);
         }
 
         if (service.existsByName(model.getName())) {
-            return ResponseEntity.badRequest().body(String.format("%s was already added", model.getName()));
+            return ResponseEntity.ok(String.format("%s was already added", model.getName()));
         }
 
         return ResponseEntity.ok(service.create(model));
@@ -52,7 +51,7 @@ public class CategoryController {
         }
 
         if (!service.existsById(model.getId())) {
-            return ResponseEntity.badRequest().body("Category with such id does not exist");
+            return ResponseEntity.ok("Category with such id does not exist");
         }
 
         return ResponseEntity.ok(service.edit(model));
@@ -68,7 +67,7 @@ public class CategoryController {
             return ResponseEntity.ok("Category successfully deleted");
         }
         else {
-            return ResponseEntity.badRequest().body("Category was not deleted.");
+            return ResponseEntity.ok("Category was not deleted.");
         }
     }
 }
