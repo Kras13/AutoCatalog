@@ -6,6 +6,9 @@ public class FuelCreateModel {
     @NotBlank(message = "Name is required!")
     private String name;
 
+    public FuelCreateModel() {
+    }
+
     public String getName() {
         return name;
     }

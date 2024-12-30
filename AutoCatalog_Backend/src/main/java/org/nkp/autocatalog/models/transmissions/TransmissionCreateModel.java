@@ -6,6 +6,13 @@ public class TransmissionCreateModel {
     @NotBlank(message = "Name is required!")
     private String name;
 
+    public TransmissionCreateModel() {
+    }
+
+    public TransmissionCreateModel(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
