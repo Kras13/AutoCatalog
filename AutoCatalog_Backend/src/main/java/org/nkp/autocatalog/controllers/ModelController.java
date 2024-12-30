@@ -24,7 +24,7 @@ public class ModelController {
             return ResponseEntity.ok(service.getForMake(id));
         }
         catch(EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(e.getMessage());
         }
     }
 
