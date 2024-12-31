@@ -1,5 +1,6 @@
 package org.nkp.autocatalog.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.nkp.autocatalog.entities.Category;
 import org.nkp.autocatalog.entities.Fuel;
 import org.nkp.autocatalog.models.categories.CategoryCreateModel;
@@ -21,17 +22,13 @@ public class FuelService {
 
     public FuelModel create(FuelCreateModel model) {
         if (fuelRepository.findByName(model.getName()).isPresent()) {
-            throw new IllegalArgumentException("Fuel with such name already exists");
+            throw new EntityNotFoundException("Fuel with such name already exists");
         }
 
         var fuel = new Fuel(model.getName());
         var savedFuel = fuelRepository.save(fuel);
 
         return new FuelModel(savedFuel.getId(), savedFuel.getName());
-    }
-
-    public Boolean existsByName(String name) {
-        return fuelRepository.findByName(name).isPresent();
     }
 
     public List<FuelModel> getAll() {

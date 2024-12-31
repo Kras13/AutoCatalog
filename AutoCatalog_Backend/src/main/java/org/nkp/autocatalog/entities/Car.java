@@ -13,14 +13,17 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "production_date")
-    private Date productionDate;
+    @Column(name = "date_manufactured")
+    private Date dateManufactured;
 
     @ManyToOne
     @JoinColumn(name = "model_id")
@@ -54,17 +57,18 @@ public class Car {
     }
 
     public Car(
+            String title,
             String description,
             Double price,
-            Date productionDate,
-            Model model,
+            Date dateManufactured, Model model,
             Category category,
             Fuel fuel,
             Transmission transmission,
             User user) {
+        this.title = title;
         this.description = description;
         this.price = price;
-        this.productionDate = productionDate;
+        this.dateManufactured = dateManufactured;
         this.model = model;
         this.category = category;
         this.fuel = fuel;
@@ -78,6 +82,14 @@ public class Car {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -94,14 +106,6 @@ public class Car {
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public Date getProductionDate() {
-        return productionDate;
-    }
-
-    public void setProductionDate(Date productionDate) {
-        this.productionDate = productionDate;
     }
 
     public Model getModel() {
@@ -142,5 +146,21 @@ public class Car {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Date getDateManufactured() {
+        return dateManufactured;
+    }
+
+    public void setDateManufactured(Date dateManufactured) {
+        this.dateManufactured = dateManufactured;
+    }
+
+    public Set<CarFeature> getCarFeatures() {
+        return carFeatures;
+    }
+
+    public void setCarFeatures(Set<CarFeature> carFeatures) {
+        this.carFeatures = carFeatures;
     }
 }

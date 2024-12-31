@@ -1,5 +1,6 @@
 package org.nkp.autocatalog.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.nkp.autocatalog.entities.Feature;
 import org.nkp.autocatalog.models.features.FeatureCreateModel;
 import org.nkp.autocatalog.models.features.FeatureModel;
@@ -26,7 +27,7 @@ public class FeatureService {
 
     public FeatureModel create(FeatureCreateModel model) {
         if (featureRepository.findByName(model.getName()).isPresent()) {
-            throw new IllegalArgumentException("Feature with such name already exists");
+            throw new EntityNotFoundException("Feature with such name already exists");
         }
 
         var feature = new Feature(model.getName(), model.getDescription());

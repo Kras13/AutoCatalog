@@ -1,5 +1,6 @@
 package org.nkp.autocatalog.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.nkp.autocatalog.entities.Transmission;
 import org.nkp.autocatalog.models.transmissions.TransmissionCreateModel;
 import org.nkp.autocatalog.models.transmissions.TransmissionModel;
@@ -18,17 +19,13 @@ public class TransmissionService {
 
     public TransmissionModel create(TransmissionCreateModel model) {
         if (transmissionRepository.findByName(model.getName()).isPresent()) {
-            throw new IllegalArgumentException("Transmission with such name already exists");
+            throw new EntityNotFoundException("Transmission with such name already exists");
         }
 
         var fuel = new Transmission(model.getName());
         var savedFuel = transmissionRepository.save(fuel);
 
         return new TransmissionModel(savedFuel.getId(), savedFuel.getName());
-    }
-
-    public Boolean existsByName(String name) {
-        return transmissionRepository.findByName(name).isPresent();
     }
 
     public List<TransmissionModel> getAll() {

@@ -35,10 +35,6 @@ public class CategoryController {
             return BaseController.FormatBadRequest(bindingResult);
         }
 
-        if (service.existsByName(model.getName())) {
-            return ResponseEntity.ok(String.format("%s was already added", model.getName()));
-        }
-
         return ResponseEntity.ok(service.create(model));
     }
 
@@ -50,24 +46,11 @@ public class CategoryController {
             return BaseController.FormatBadRequest(bindingResult);
         }
 
-        if (!service.existsById(model.getId())) {
-            return ResponseEntity.ok("Category with such id does not exist");
-        }
-
         return ResponseEntity.ok(service.edit(model));
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(Long id) {
-        if (!service.existsById(id)) {
-            return ResponseEntity.badRequest().body("Category with such id does not exist");
-        }
-
-        if (service.deleteById(id)) {
-            return ResponseEntity.ok("Category successfully deleted");
-        }
-        else {
-            return ResponseEntity.ok("Category was not deleted.");
-        }
+        return ResponseEntity.ok(service.deleteById(id));
     }
 }

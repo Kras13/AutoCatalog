@@ -1,6 +1,8 @@
 package org.nkp.autocatalog.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.nkp.autocatalog.entities.Category;
+import org.nkp.autocatalog.exceptions.EntityAlreadyExistsException;
 import org.nkp.autocatalog.models.categories.CategoryModel;
 import org.nkp.autocatalog.models.categories.CategoryCreateModel;
 import org.nkp.autocatalog.models.categories.EditCategoryModel;
@@ -19,7 +21,7 @@ public class CategoryService {
 
     public CategoryModel create(CategoryCreateModel model) {
         if (categoryRepository.findByName(model.getName()).isPresent()) {
-            throw new IllegalArgumentException("Category with such name already exists");
+            throw new EntityAlreadyExistsException("Category with such name already exists");
         }
 
         var category = new Category(model.getName());
@@ -48,7 +50,7 @@ public class CategoryService {
         var category = categoryRepository.findById(model.getId());
 
         if (!category.isPresent()) {
-            throw new IllegalArgumentException("Category with such id does not exist");
+            throw new EntityNotFoundException("Category with such id does not exist");
         }
 
         var persistCategory = category.get();
@@ -64,7 +66,7 @@ public class CategoryService {
         var category = categoryRepository.findById(id);
 
         if (!category.isPresent()) {
-            throw new IllegalArgumentException("Category with such id does not exist");
+            throw new EntityNotFoundException("Category with such id does not exist");
         }
 
         categoryRepository.delete(category.get());

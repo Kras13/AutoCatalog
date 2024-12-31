@@ -34,10 +34,6 @@ public class BrandController {
             return BaseController.FormatBadRequest(bindingResult);
         }
 
-        if (service.existsByName(model.getName())) {
-            return ResponseEntity.ok(String.format("%s was already added", model.getName()));
-        }
-
         return ResponseEntity.ok(service.create(model));
     }
 }
