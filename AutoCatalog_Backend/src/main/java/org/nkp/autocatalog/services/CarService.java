@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +44,13 @@ public class CarService {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.featureRepository = featureRepository;
+    }
+
+    public List<CarModel> getAll() {
+        return carRepository.findAll()
+                .stream()
+                .map(this::projectToCarModel)
+                .toList();
     }
 
     public CarModel create(CarCreateModel input) throws ParseException {
@@ -102,20 +110,28 @@ public class CarService {
                 e -> new CarFeature(car, e)).collect(Collectors.toSet()));
 
         var savedCar = carRepository.save(car);
-        var savedModel = savedCar.getModel();
+
+        return projectToCarModel(savedCar);
+    }
+
+    private CarModel projectToCarModel(Car source) {
+        var carModel = source.getModel();
+        var category = source.getCategory();
+        var fuel = source.getFuel();
+        var transmission = source.getTransmission();
 
         return new CarModel(
-                savedCar.getId(),
+                source.getId(),
                 new ModelResponse(
-                        savedModel.getId(),
-                        savedModel.getName(),
-                        new BrandModel(savedModel.getBrand().getId(), savedModel.getBrand().getName())),
-                savedCar.getTitle(),
-                savedCar.getDescription(),
-                savedCar.getPrice(),
-                savedCar.getDateManufactured(),
-                new CategoryModel(category.get().getId(), category.get().getName()),
-                new FuelModel(fuel.get().getId(), fuel.get().getName()),
-                new TransmissionModel(transmission.get().getId(), transmission.get().getName()));
+                        carModel.getId(),
+                        carModel.getName(),
+                        new BrandModel(carModel.getBrand().getId(), carModel.getBrand().getName())),
+                source.getTitle(),
+                source.getDescription(),
+                source.getPrice(),
+                source.getDateManufactured(),
+                new CategoryModel(category.getId(), category.getName()),
+                new FuelModel(fuel.getId(), fuel.getName()),
+                new TransmissionModel(transmission.getId(), transmission.getName()));
     }
 }
