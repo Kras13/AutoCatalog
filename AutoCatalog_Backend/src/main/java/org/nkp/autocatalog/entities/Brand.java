@@ -42,4 +42,12 @@ public class Brand {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Set<Model> getModels() {
+        return models;
+    }
+
+    public void setModels(Set<Model> models) {
+        this.models = models;
+    }
 }

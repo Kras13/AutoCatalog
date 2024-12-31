@@ -1,6 +1,9 @@
 package org.nkp.autocatalog.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "categories")
@@ -11,6 +14,10 @@ public class Category {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "category")
+    private Set<Car> cars;
 
     public Category(String name) {
         this.name = name;
@@ -33,5 +40,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(Set<Car> cars) {
+        this.cars = cars;
     }
 }

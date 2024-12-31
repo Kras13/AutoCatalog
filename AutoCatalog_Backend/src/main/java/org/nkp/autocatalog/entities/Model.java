@@ -1,7 +1,10 @@
 package org.nkp.autocatalog.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "models")
@@ -17,6 +20,10 @@ public class Model {
     @JoinColumn(name = "brand_id")
     @JsonBackReference
     private Brand brand;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "model")
+    private Set<Car> cars;
 
     public Model() {
     }
@@ -48,5 +55,13 @@ public class Model {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
+    }
+
+    public Set<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(Set<Car> cars) {
+        this.cars = cars;
     }
 }
