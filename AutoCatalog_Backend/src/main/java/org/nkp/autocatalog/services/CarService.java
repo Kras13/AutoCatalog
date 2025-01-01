@@ -90,9 +90,11 @@ public class CarService {
             throw new EntityNotFoundException("User with such id does not exist");
 
         Date dateManufactured;
+        java.sql.Date sqlDateManufactured;
 
         try {
             dateManufactured = new SimpleDateFormat("dd/MM/yyyy").parse(input.getDateManufactured());
+            sqlDateManufactured = new java.sql.Date(dateManufactured.getTime());
         }
         catch (ParseException e) {
             throw new DateTimeParseException("Provided date is not in 'dd/MM/yyyy' format");
@@ -108,7 +110,7 @@ public class CarService {
                     input.getTitle(),
                     input.getDescription(),
                     input.getPrice(),
-                    dateManufactured,
+                    sqlDateManufactured,
                     model.get(),
                     category.get(),
                     fuel.get(),
@@ -210,6 +212,7 @@ public class CarService {
 
         var cars = carRepository.filterCarPages(
                 pageable,
+                request.getBrandId(),
                 request.getModelId(),
                 request.getTransmissionId(),
                 request.getFuelId(),

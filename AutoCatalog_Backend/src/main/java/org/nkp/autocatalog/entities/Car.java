@@ -3,7 +3,7 @@ package org.nkp.autocatalog.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 @Entity
@@ -23,6 +23,7 @@ public class Car {
     private Double price;
 
     @Column(name = "date_manufactured")
+    @Temporal(TemporalType.DATE)
     private Date dateManufactured;
 
     @ManyToOne

@@ -3,6 +3,7 @@ package org.nkp.autocatalog.models.cars;
 import java.util.List;
 
 public class CarFilterRequest {
+    Long brandId;
     private Long modelId;
     private Long transmissionId;
     private Long fuelId;
@@ -15,6 +16,7 @@ public class CarFilterRequest {
     }
 
     public CarFilterRequest(
+            Long brandId,
             Long modelId,
             Long transmissionId,
             Long fuelId,
@@ -22,6 +24,7 @@ public class CarFilterRequest {
             List<Long> features,
             String fromDate,
             String untilDate) {
+        this.brandId = brandId;
         this.modelId = modelId;
         this.transmissionId = transmissionId;
         this.fuelId = fuelId;
@@ -85,5 +88,13 @@ public class CarFilterRequest {
 
     public void setUntilDate(String untilDate) {
         this.untilDate = untilDate;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
     }
 }
