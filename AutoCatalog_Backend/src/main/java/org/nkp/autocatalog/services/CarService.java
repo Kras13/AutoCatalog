@@ -4,12 +4,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.nkp.autocatalog.entities.*;
 import org.nkp.autocatalog.exceptions.DateTimeParseException;
+import org.nkp.autocatalog.exceptions.UnauthorizedEditException;
 import org.nkp.autocatalog.models.Models.ModelResponse;
 import org.nkp.autocatalog.models.brands.BrandModel;
-import org.nkp.autocatalog.models.cars.CarCreateModel;
-import org.nkp.autocatalog.models.cars.CarFilterRequest;
-import org.nkp.autocatalog.models.cars.CarFilterResponse;
-import org.nkp.autocatalog.models.cars.CarModel;
+import org.nkp.autocatalog.models.cars.*;
 import org.nkp.autocatalog.models.categories.CategoryModel;
 import org.nkp.autocatalog.models.features.FeatureModel;
 import org.nkp.autocatalog.models.fuels.FuelModel;
@@ -25,9 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CarService {
     private final ModelRepository modelRepository;
     private final CategoryRepository categoryRepository;
@@ -63,7 +61,7 @@ public class CarService {
                 .toList();
     }
 
-    public CarModel create(CarCreateModel input) throws ParseException {
+    public CarModel handleRequest(CarCreateModel input, CarRequestMode mode){
         var model = modelRepository.findById(input.getModelId());
 
         if (!model.isPresent())
@@ -105,37 +103,72 @@ public class CarService {
         if (features.size() != input.getFeatures().size())
             throw new EntityNotFoundException("Feature entity not found");
 
-        var car = new Car(
-                input.getTitle(),
-                input.getDescription(),
-                input.getPrice(),
-                dateManufactured,
-                model.get(),
-                category.get(),
-                fuel.get(),
-                transmission.get(),
-                user.get());
+        if (mode == CarRequestMode.CREATE) {
+            var car = new Car(
+                    input.getTitle(),
+                    input.getDescription(),
+                    input.getPrice(),
+                    dateManufactured,
+                    model.get(),
+                    category.get(),
+                    fuel.get(),
+                    transmission.get(),
+                    user.get());
 
-        var savedCar = createCarInternal(car, features);
+            var savedCar = carRepository.save(car);
 
-        return projectToCarModel(savedCar);
+            setCarFeatures(savedCar, features);
+
+            return projectToCarModel(savedCar);
+        }
+        else {
+            var car = carRepository.findById(input.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Car with such id was not found"));
+
+            if (!car.getUser().getId().equals(user.get().getId())) {
+                throw new UnauthorizedEditException("Unauthorized car edit");
+            }
+
+            var editedCar = editCarInternal(
+                    car, features, model.get(), category.get(), fuel.get(), transmission.get());
+
+            return projectToCarModel(editedCar);
+        }
     }
 
-    @Transactional
-    private Car createCarInternal(Car car, List<Feature> features) {
+    public Car editCarInternal(
+            Car car,
+            List<Feature> features,
+            Model model,
+            Category category,
+            Fuel fuel,
+            Transmission transmission) {
+
+        car.setModel(model);
+        car.setCategory(category);
+        car.setFuel(fuel);
+        car.setTransmission(transmission);
+
+        carFeatureRepository.deleteAllByCarId(car.getId());
+
+        setCarFeatures(car, features);
+
         var savedCar = carRepository.save(car);
+
+        return savedCar;
+    }
+
+    private void setCarFeatures(Car car, List<Feature> features) {
         var carsFeatures = new HashSet<CarFeature>();
 
         for (var feature : features) {
-            var carFeature = new CarFeature(savedCar, feature);
+            var carFeature = new CarFeature(car, feature);
             var savedCarFeature = carFeatureRepository.save(carFeature);
 
             carsFeatures.add(savedCarFeature);
         }
 
-        savedCar.setCarFeatures(carsFeatures);
-
-        return savedCar;
+        car.setCarFeatures(carsFeatures);
     }
 
     public CarFilterResponse getFiltered(CarFilterRequest request, Pageable pageable) {

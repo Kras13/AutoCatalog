@@ -1,10 +1,7 @@
 package org.nkp.autocatalog.controllers;
 
 import jakarta.validation.Valid;
-import org.nkp.autocatalog.models.cars.CarCreateModel;
-import org.nkp.autocatalog.models.cars.CarFilterResponse;
-import org.nkp.autocatalog.models.cars.CarModel;
-import org.nkp.autocatalog.models.cars.CarFilterRequest;
+import org.nkp.autocatalog.models.cars.*;
 import org.nkp.autocatalog.services.CarService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +41,23 @@ public class CarController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createCar(
-            @Valid @RequestBody CarCreateModel model, BindingResult bindingResult) throws ParseException {
+            @Valid @RequestBody CarCreateModel model, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return BaseController.FormatBadRequest(bindingResult);
         }
 
-        return ResponseEntity.ok(service.create(model));
+        return ResponseEntity.ok(service.handleRequest(model, CarRequestMode.CREATE));
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<?> editCar(
+            @Valid @RequestBody CarCreateModel model, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return BaseController.FormatBadRequest(bindingResult);
+        }
+
+        return ResponseEntity.ok(service.handleRequest(model, CarRequestMode.EDIT));
     }
 }

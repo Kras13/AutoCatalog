@@ -28,4 +28,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.ACCEPTED)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(UnauthorizedEditException.class)
+    public ResponseEntity<String> handleUnauthorizedEditException(UnauthorizedEditException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(exception.getMessage());
+    }
 }

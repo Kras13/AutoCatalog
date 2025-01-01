@@ -1,14 +1,10 @@
 package org.nkp.autocatalog.models.cars;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
-
-import java.util.Date;
 import java.util.List;
 
 public class CarCreateModel {
+    private Long id;
     private Long modelId;
 
     @NotBlank(message = "Title is required!")
@@ -30,6 +26,7 @@ public class CarCreateModel {
     }
 
     public CarCreateModel(
+            Long id,
             Long modelId,
             String title,
             String description,
@@ -38,6 +35,7 @@ public class CarCreateModel {
             Long categoryId,
             Long fuelId,
             Long transmissionId, List<Long> features) {
+        this.id = id;
         this.modelId = modelId;
         this.title = title;
         this.description = description;
@@ -47,6 +45,14 @@ public class CarCreateModel {
         this.fuelId = fuelId;
         this.transmissionId = transmissionId;
         this.features = features;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getModelId() {
