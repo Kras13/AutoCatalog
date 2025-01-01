@@ -130,7 +130,15 @@ public class CarService {
             }
 
             var editedCar = editCarInternal(
-                    car, features, model.get(), category.get(), fuel.get(), transmission.get());
+                    car,
+                    features,
+                    model.get(),
+                    category.get(),
+                    fuel.get(),
+                    transmission.get(),
+                    input.getPrice(),
+                    input.getTitle(),
+                    input.getDescription());
 
             return projectToCarModel(editedCar);
         }
@@ -142,12 +150,18 @@ public class CarService {
             Model model,
             Category category,
             Fuel fuel,
-            Transmission transmission) {
+            Transmission transmission,
+            double price,
+            String title,
+            String description) {
 
         car.setModel(model);
         car.setCategory(category);
         car.setFuel(fuel);
         car.setTransmission(transmission);
+        car.setPrice(price);
+        car.setTitle(title);
+        car.setDescription(description);
 
         carFeatureRepository.deleteAllByCarId(car.getId());
 
