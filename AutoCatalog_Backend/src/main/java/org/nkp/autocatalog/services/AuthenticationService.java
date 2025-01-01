@@ -31,6 +31,7 @@ public class AuthenticationService {
                 request.getFirstName(),
                 request.getLastName(),
                 request.getEmail(),
+                request.getPhoneNumber(),
                 passwordEncoder.encode(request.getPassword()),
                 Role.ADMIN);
 

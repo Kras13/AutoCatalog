@@ -12,13 +12,17 @@ public class RegisterRequest {
     @NotBlank(message = "Email is required!")
     private String email;
 
+    @NotBlank(message = "Phone number is required!")
+    private String phoneNumber;
+
     @Size(min = 3, message = "Password must be at least 3 characters")
     private String password;
 
-    public RegisterRequest(String firstName, String lastName, String email, String password) {
+    public RegisterRequest(String firstName, String lastName, String email, String phoneNumber, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
     }
 
@@ -47,6 +51,14 @@ public class RegisterRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPassword() {

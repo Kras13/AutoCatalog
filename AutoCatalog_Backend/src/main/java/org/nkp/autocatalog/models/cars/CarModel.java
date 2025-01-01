@@ -2,10 +2,12 @@ package org.nkp.autocatalog.models.cars;
 
 import org.nkp.autocatalog.models.Models.ModelResponse;
 import org.nkp.autocatalog.models.categories.CategoryModel;
+import org.nkp.autocatalog.models.features.FeatureModel;
 import org.nkp.autocatalog.models.fuels.FuelModel;
 import org.nkp.autocatalog.models.transmissions.TransmissionModel;
 
 import java.util.Date;
+import java.util.List;
 
 public class CarModel {
     private Long id;
@@ -17,6 +19,7 @@ public class CarModel {
     private CategoryModel category;
     private FuelModel fuel;
     private TransmissionModel transmission;
+    private List<FeatureModel> features;
 
     public CarModel() {
     }
@@ -30,7 +33,7 @@ public class CarModel {
             Date dateManufactured,
             CategoryModel category,
             FuelModel fuel,
-            TransmissionModel transmission) {
+            TransmissionModel transmission, List<FeatureModel> features) {
         this.id = id;
         this.model = model;
         this.title = title;
@@ -40,6 +43,7 @@ public class CarModel {
         this.category = category;
         this.fuel = fuel;
         this.transmission = transmission;
+        this.features = features;
     }
 
     public Long getId() {
@@ -112,5 +116,13 @@ public class CarModel {
 
     public void setTransmission(TransmissionModel transmission) {
         this.transmission = transmission;
+    }
+
+    public List<FeatureModel> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(List<FeatureModel> features) {
+        this.features = features;
     }
 }

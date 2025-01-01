@@ -19,7 +19,7 @@ public class Car {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private Double price;
 
     @Column(name = "date_manufactured")
@@ -60,7 +60,8 @@ public class Car {
             String title,
             String description,
             Double price,
-            Date dateManufactured, Model model,
+            Date dateManufactured,
+            Model model,
             Category category,
             Fuel fuel,
             Transmission transmission,

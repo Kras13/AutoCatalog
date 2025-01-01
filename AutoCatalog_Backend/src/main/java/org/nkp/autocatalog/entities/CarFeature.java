@@ -23,6 +23,7 @@ public class CarFeature {
     }
 
     public CarFeature(Car car, Feature feature) {
+        this.id = new CarFeatureKey(car.getId(), feature.getId());
         this.car = car;
         this.feature = feature;
     }

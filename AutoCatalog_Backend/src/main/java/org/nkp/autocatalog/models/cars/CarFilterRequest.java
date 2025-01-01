@@ -2,7 +2,7 @@ package org.nkp.autocatalog.models.cars;
 
 import java.util.List;
 
-public class CarRequest {
+public class CarFilterRequest {
     private Long modelId;
     private Long transmissionId;
     private Long fuelId;
@@ -11,10 +11,10 @@ public class CarRequest {
     private String fromDate;
     private String untilDate;
 
-    public CarRequest() {
+    public CarFilterRequest() {
     }
 
-    public CarRequest(
+    public CarFilterRequest(
             Long modelId,
             Long transmissionId,
             Long fuelId,

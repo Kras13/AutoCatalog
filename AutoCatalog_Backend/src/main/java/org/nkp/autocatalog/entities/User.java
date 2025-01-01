@@ -14,10 +14,11 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    public User(String firstName, String lastName, String email, String password, Role role) {
+    public User(String firstName, String lastName, String email, String phoneNumber, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.role = role;
     }
@@ -37,6 +38,9 @@ public class User implements UserDetails {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -123,6 +127,14 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void setPassword(String password) {

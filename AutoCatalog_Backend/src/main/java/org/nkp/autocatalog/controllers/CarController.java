@@ -2,12 +2,17 @@ package org.nkp.autocatalog.controllers;
 
 import jakarta.validation.Valid;
 import org.nkp.autocatalog.models.cars.CarCreateModel;
+import org.nkp.autocatalog.models.cars.CarFilterResponse;
 import org.nkp.autocatalog.models.cars.CarModel;
-import org.nkp.autocatalog.models.cars.CarRequest;
+import org.nkp.autocatalog.models.cars.CarFilterRequest;
 import org.nkp.autocatalog.services.CarService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.text.ParseException;
 import java.util.List;
@@ -27,8 +32,14 @@ public class CarController {
     }
 
     @GetMapping("/filter")
-    public List<CarModel> filterCars(CarRequest request) {
-        return service.getAll();
+    public CarFilterResponse filterCars(
+            CarFilterRequest request,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "3") int perPage) {
+
+        Pageable pageable = PageRequest.of(currentPage - 1, perPage);
+
+        return service.getFiltered(request, pageable);
     }
 
     @PostMapping("/create")

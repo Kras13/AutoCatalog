@@ -1,16 +1,21 @@
 package org.nkp.autocatalog.services;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.nkp.autocatalog.entities.*;
 import org.nkp.autocatalog.exceptions.DateTimeParseException;
 import org.nkp.autocatalog.models.Models.ModelResponse;
 import org.nkp.autocatalog.models.brands.BrandModel;
 import org.nkp.autocatalog.models.cars.CarCreateModel;
+import org.nkp.autocatalog.models.cars.CarFilterRequest;
+import org.nkp.autocatalog.models.cars.CarFilterResponse;
 import org.nkp.autocatalog.models.cars.CarModel;
 import org.nkp.autocatalog.models.categories.CategoryModel;
+import org.nkp.autocatalog.models.features.FeatureModel;
 import org.nkp.autocatalog.models.fuels.FuelModel;
 import org.nkp.autocatalog.models.transmissions.TransmissionModel;
 import org.nkp.autocatalog.repositories.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,13 +36,16 @@ public class CarService {
     private final UserRepository userRepository;
     private final CarRepository carRepository;
     private final FeatureRepository featureRepository;
+    private final CarFeatureRepository carFeatureRepository;
 
     public CarService(ModelRepository modelRepository,
                       CategoryRepository categoryRepository,
                       FuelRepository fuelRepository,
                       TransmissionRepository transmissionRepository,
                       UserRepository userRepository,
-                      CarRepository carRepository, FeatureRepository featureRepository) {
+                      CarRepository carRepository,
+                      FeatureRepository featureRepository,
+                      CarFeatureRepository carFeatureRepository) {
         this.modelRepository = modelRepository;
         this.categoryRepository = categoryRepository;
         this.fuelRepository = fuelRepository;
@@ -44,6 +53,7 @@ public class CarService {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.featureRepository = featureRepository;
+        this.carFeatureRepository = carFeatureRepository;
     }
 
     public List<CarModel> getAll() {
@@ -106,12 +116,36 @@ public class CarService {
                 transmission.get(),
                 user.get());
 
-        car.setCarFeatures(features.stream().map(
-                e -> new CarFeature(car, e)).collect(Collectors.toSet()));
-
-        var savedCar = carRepository.save(car);
+        var savedCar = createCarInternal(car, features);
 
         return projectToCarModel(savedCar);
+    }
+
+    @Transactional
+    private Car createCarInternal(Car car, List<Feature> features) {
+        var savedCar = carRepository.save(car);
+        var carsFeatures = new HashSet<CarFeature>();
+
+        for (var feature : features) {
+            var carFeature = new CarFeature(savedCar, feature);
+            var savedCarFeature = carFeatureRepository.save(carFeature);
+
+            carsFeatures.add(savedCarFeature);
+        }
+
+        savedCar.setCarFeatures(carsFeatures);
+
+        return savedCar;
+    }
+
+    public CarFilterResponse getFiltered(CarFilterRequest request, Pageable pageable) {
+        var cars = carRepository.filterCarPages(pageable, request.getCategoryId());
+        var projectedCars = cars
+                .stream()
+                .map(this::projectToCarModel)
+                .toList();
+
+        return new CarFilterResponse(projectedCars, cars.getTotalPages(), cars.getTotalElements());
     }
 
     private CarModel projectToCarModel(Car source) {
@@ -119,6 +153,11 @@ public class CarService {
         var category = source.getCategory();
         var fuel = source.getFuel();
         var transmission = source.getTransmission();
+        var features = source.getCarFeatures()
+                .stream()
+                .map(e -> new FeatureModel(
+                        e.getFeature().getId(), e.getFeature().getName(), e.getFeature().getDescription()))
+                .toList();
 
         return new CarModel(
                 source.getId(),
@@ -132,6 +171,7 @@ public class CarService {
                 source.getDateManufactured(),
                 new CategoryModel(category.getId(), category.getName()),
                 new FuelModel(fuel.getId(), fuel.getName()),
-                new TransmissionModel(transmission.getId(), transmission.getName()));
+                new TransmissionModel(transmission.getId(), transmission.getName()),
+                features);
     }
 }
