@@ -186,7 +186,38 @@ public class CarService {
     }
 
     public CarFilterResponse getFiltered(CarFilterRequest request, Pageable pageable) {
-        var cars = carRepository.filterCarPages(pageable, request.getCategoryId());
+        java.sql.Date sqlFromDate = null;
+        java.sql.Date sqlUntilDate = null;
+
+        try {
+            if (request.getFromDate() != null) {
+                var fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(request.getFromDate());
+
+                sqlFromDate = new java.sql.Date(fromDate.getTime());
+            }
+
+
+            if (request.getUntilDate() != null) {
+                var untilDate = new SimpleDateFormat("dd/MM/yyyy").parse(request.getUntilDate());
+
+                sqlUntilDate = new java.sql.Date(untilDate.getTime());
+            }
+
+        }
+        catch (ParseException e) {
+            throw new DateTimeParseException("Dates must be in 'dd/MM/yyyy' format");
+        }
+
+        var cars = carRepository.filterCarPages(
+                pageable,
+                request.getModelId(),
+                request.getTransmissionId(),
+                request.getFuelId(),
+                request.getCategoryId(),
+                request.getFeatures(),
+                sqlFromDate,
+                sqlUntilDate);
+
         var projectedCars = cars
                 .stream()
                 .map(this::projectToCarModel)
