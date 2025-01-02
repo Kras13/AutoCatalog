@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { MultiSelect } from "primereact/multiselect";
+import "primereact/resources/themes/lara-light-indigo/theme.css"; // Import a theme
+import "primereact/resources/primereact.min.css"; // Import core styles
+import "primeicons/primeicons.css"; // Import prime icons
 
 interface Car {
   id: number;
@@ -21,6 +25,11 @@ interface Model {
   name: string;
 }
 
+interface Feature {
+  id: number;
+  name: string;
+}
+
 interface PaginatedResponse {
   cars: Car[];
   totalPages: number;
@@ -31,12 +40,11 @@ function CarList() {
   const [cars, setCars] = useState<Car[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [models, setModels] = useState<Model[]>([]);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [elementsPerPage] = useState<number>(3);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [pendingFilters, setPendingFilters] = useState({
     brandId: "all",
     modelId: "all",
@@ -44,40 +52,38 @@ function CarList() {
   const [appliedFilters, setAppliedFilters] = useState({
     brandId: "all",
     modelId: "all",
+    features: [] as number[],
   });
 
   const fetchCars = async (page: number) => {
-    setLoading(true);
-    setError(null);
+    const queryParameters = new URLSearchParams();
+    queryParameters.append("currentPage", page.toString());
+    queryParameters.append("elementsPerPage", elementsPerPage.toString());
+
+    if (appliedFilters.brandId !== "all") {
+      queryParameters.append("brandId", appliedFilters.brandId);
+    }
+
+    if (appliedFilters.modelId !== "all") {
+      queryParameters.append("modelId", appliedFilters.modelId);
+    }
+
+    if (appliedFilters.features.length > 0) {
+      queryParameters.append("features", appliedFilters.features.join(","));
+    }
 
     try {
-      const params = new URLSearchParams({
-        currentPage: page.toString(),
-        elementsPerPage: elementsPerPage.toString(),
-      });
-
-      if (appliedFilters.brandId !== "all") {
-        params.append("brandId", appliedFilters.brandId);
-      }
-
-      if (appliedFilters.modelId !== "all") {
-        params.append("modelId", appliedFilters.modelId);
-      }
-
       const response = await fetch(
-        `http://localhost:8080/api/car/filter?${params.toString()}`
+        `http://localhost:8080/api/car/filter?${queryParameters.toString()}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch cars");
       }
-
       const data: PaginatedResponse = await response.json();
       setCars(data.cars);
       setTotalPages(data.totalPages);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -89,15 +95,14 @@ function CarList() {
       }
       const data: Brand[] = await response.json();
       setBrands(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const fetchModels = async (brandId: string) => {
     if (brandId === "all") {
       setModels([]);
-      console.log("in here...");
       return;
     }
     try {
@@ -109,8 +114,21 @@ function CarList() {
       }
       const data: Model[] = await response.json();
       setModels(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchFeatures = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/feature/fetch");
+      if (!response.ok) {
+        throw new Error("Failed to fetch features");
+      }
+      const data: Feature[] = await response.json();
+      setFeatures(data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -120,6 +138,7 @@ function CarList() {
 
   useEffect(() => {
     fetchBrands();
+    fetchFeatures();
   }, []);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -130,39 +149,31 @@ function CarList() {
     }));
 
     if (name === "brandId") {
-      setPendingFilters((prev) => ({
-        ...prev,
-        modelId: "all",
-      }));
       fetchModels(value);
     }
   };
 
-  const applyFilters = () => {
-    setAppliedFilters({ ...pendingFilters });
-    setCurrentPage(1);
+  const handleFeatureSelection = (selectedValues: number[]) => {
+    setSelectedFeatures(selectedValues);
   };
 
-  if (loading) {
-    return <p>Loading cars...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  const applyFilters = () => {
+    setAppliedFilters({
+      ...pendingFilters,
+      features: selectedFeatures,
+    });
+    setCurrentPage(1);
+  };
 
   return (
     <div className="container mt-4">
       <h2>Car Catalog</h2>
-      <div className="row mb-4">
-        <div className="col-md-4">
-          <label htmlFor="brandFilter" className="form-label">
-            Brand
-          </label>
+      <div className="row mb-3">
+        <div className="col-md-3">
+          <label>Brand</label>
           <select
-            id="brandFilter"
-            name="brandId"
             className="form-select"
+            name="brandId"
             value={pendingFilters.brandId}
             onChange={handleFilterChange}
           >
@@ -174,14 +185,11 @@ function CarList() {
             ))}
           </select>
         </div>
-        <div className="col-md-4">
-          <label htmlFor="modelFilter" className="form-label">
-            Model
-          </label>
+        <div className="col-md-3">
+          <label>Model</label>
           <select
-            id="modelFilter"
-            name="modelId"
             className="form-select"
+            name="modelId"
             value={pendingFilters.modelId}
             onChange={handleFilterChange}
           >
@@ -193,13 +201,29 @@ function CarList() {
             ))}
           </select>
         </div>
-        <div className="col-md-4 d-flex align-items-end">
+        <div className="col-md-3">
+          <label>Features</label>
+          <MultiSelect
+            value={selectedFeatures}
+            options={features.map((feature) => ({
+              label: feature.name,
+              value: feature.id,
+            }))}
+            onChange={(e) => handleFeatureSelection(e.value)}
+            placeholder="Select Features"
+            display="chip"
+            optionLabel="label"
+            optionValue="value"
+            className="w-full"
+            filter
+          />
+        </div>
+        <div className="col-md-3 d-flex align-items-end">
           <button className="btn btn-primary" onClick={applyFilters}>
             Apply Filters
           </button>
         </div>
       </div>
-
       <div className="row">
         {cars.map((car) => (
           <div key={car.id} className="col-md-4 mb-4">
@@ -214,8 +238,7 @@ function CarList() {
                   {car.title} - {car.price} lv.
                 </h5>
                 <p className="card-text">
-                  {car.yearManufactured}, {car.fuel}, {car.kilometers || "N/A"}{" "}
-                  KM
+                  {car.yearManufactured}, {car.fuel}, {car.kilometers} KM
                 </p>
                 <Link to={`/car/${car.id}`} className="btn btn-primary">
                   View Details
@@ -225,10 +248,9 @@ function CarList() {
           </div>
         ))}
       </div>
-
       <div className="d-flex justify-content-center mt-4">
         <button
-          className="btn btn-secondary"
+          className="btn btn-secondary me-2"
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -238,9 +260,9 @@ function CarList() {
           Page {currentPage} of {totalPages}
         </span>
         <button
-          className="btn btn-secondary"
+          className="btn btn-secondary ms-2"
           onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage >= totalPages}
+          disabled={currentPage === totalPages}
         >
           Next
         </button>
