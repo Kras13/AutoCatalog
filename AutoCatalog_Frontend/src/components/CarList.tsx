@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; // Import a theme
-import "primereact/resources/primereact.min.css"; // Import core styles
-import "primeicons/primeicons.css"; // Import prime icons
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 
 interface Car {
   id: number;
@@ -57,6 +57,7 @@ function CarList() {
 
   const fetchCars = async (page: number) => {
     const queryParameters = new URLSearchParams();
+
     queryParameters.append("currentPage", page.toString());
     queryParameters.append("elementsPerPage", elementsPerPage.toString());
 
@@ -214,7 +215,8 @@ function CarList() {
             display="chip"
             optionLabel="label"
             optionValue="value"
-            className="w-full"
+            className="prMultiselect"
+            style={{ marginTop: "12px" }}
             filter
           />
         </div>
