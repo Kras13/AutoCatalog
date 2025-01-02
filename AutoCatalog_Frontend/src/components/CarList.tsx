@@ -37,16 +37,13 @@ function CarList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
   const [pendingFilters, setPendingFilters] = useState({
     brandId: "all",
     modelId: "all",
-    transmissionId: "all",
   });
   const [appliedFilters, setAppliedFilters] = useState({
     brandId: "all",
     modelId: "all",
-    transmissionId: "all",
   });
 
   const fetchCars = async (page: number) => {
@@ -100,6 +97,7 @@ function CarList() {
   const fetchModels = async (brandId: string) => {
     if (brandId === "all") {
       setModels([]);
+      console.log("in here...");
       return;
     }
     try {
