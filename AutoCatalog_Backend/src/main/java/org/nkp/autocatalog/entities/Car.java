@@ -26,6 +26,9 @@ public class Car {
     @Temporal(TemporalType.DATE)
     private Date dateManufactured;
 
+    @Column(name = "kilometers")
+    private Long kilometers;
+
     @ManyToOne
     @JoinColumn(name = "model_id")
     @JsonBackReference
@@ -62,6 +65,7 @@ public class Car {
             String description,
             Double price,
             Date dateManufactured,
+            Long kilometers,
             Model model,
             Category category,
             Fuel fuel,
@@ -71,6 +75,7 @@ public class Car {
         this.description = description;
         this.price = price;
         this.dateManufactured = dateManufactured;
+        this.kilometers = kilometers;
         this.model = model;
         this.category = category;
         this.fuel = fuel;
@@ -164,5 +169,13 @@ public class Car {
 
     public void setCarFeatures(Set<CarFeature> carFeatures) {
         this.carFeatures = carFeatures;
+    }
+
+    public Long getKilometers() {
+        return kilometers;
+    }
+
+    public void setKilometers(Long kilometers) {
+        this.kilometers = kilometers;
     }
 }

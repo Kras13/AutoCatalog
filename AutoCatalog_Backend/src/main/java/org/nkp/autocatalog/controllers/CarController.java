@@ -7,11 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -24,7 +21,7 @@ public class CarController {
     }
 
     @GetMapping("/fetch")
-    public List<CarModel> getAllCars() {
+    public List<CarFetchResponse> getAllCars() {
         return service.getAll();
     }
 
@@ -37,6 +34,11 @@ public class CarController {
         Pageable pageable = PageRequest.of(currentPage - 1, perPage);
 
         return service.getFiltered(request, pageable);
+    }
+
+    @GetMapping("/{id}")
+    public CarModel details(@PathVariable Long id) {
+        return service.getById(id);
     }
 
     @PostMapping("/create")

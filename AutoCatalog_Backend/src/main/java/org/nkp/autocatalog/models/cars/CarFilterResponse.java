@@ -3,24 +3,24 @@ package org.nkp.autocatalog.models.cars;
 import java.util.List;
 
 public class CarFilterResponse {
-    private List<CarModel> cars;
+    private List<CarFetchResponse> cars;
     private int totalPages;
     private long totalElements;
 
     public CarFilterResponse() {
     }
 
-    public CarFilterResponse(List<CarModel> cars, int totalPages, long totalElements) {
+    public CarFilterResponse(List<CarFetchResponse> cars, int totalPages, long totalElements) {
         this.cars = cars;
         this.totalPages = totalPages;
         this.totalElements = totalElements;
     }
 
-    public List<CarModel> getCars() {
+    public List<CarFetchResponse> getCars() {
         return cars;
     }
 
-    public void setCars(List<CarModel> cars) {
+    public void setCars(List<CarFetchResponse> cars) {
         this.cars = cars;
     }
 

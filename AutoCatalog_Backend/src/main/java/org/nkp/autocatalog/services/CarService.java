@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -54,11 +52,18 @@ public class CarService {
         this.carFeatureRepository = carFeatureRepository;
     }
 
-    public List<CarModel> getAll() {
+    public List<CarFetchResponse> getAll() {
         return carRepository.findAll()
                 .stream()
-                .map(this::projectToCarModel)
+                .map(this::projectToFetchModel)
                 .toList();
+    }
+
+    public CarModel getById(Long id) {
+        var car = carRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Car with such id was not found"));
+
+        return projectToCarModel(car);
     }
 
     public CarModel handleRequest(CarCreateModel input, CarRequestMode mode){
@@ -111,6 +116,7 @@ public class CarService {
                     input.getDescription(),
                     input.getPrice(),
                     sqlDateManufactured,
+                    input.getKilometers(),
                     model.get(),
                     category.get(),
                     fuel.get(),
@@ -169,9 +175,7 @@ public class CarService {
 
         setCarFeatures(car, features);
 
-        var savedCar = carRepository.save(car);
-
-        return savedCar;
+        return carRepository.save(car);
     }
 
     private void setCarFeatures(Car car, List<Feature> features) {
@@ -223,10 +227,32 @@ public class CarService {
 
         var projectedCars = cars
                 .stream()
-                .map(this::projectToCarModel)
+                .map(this::projectToFetchModel)
                 .toList();
 
         return new CarFilterResponse(projectedCars, cars.getTotalPages(), cars.getTotalElements());
+    }
+
+    private CarFetchResponse projectToFetchModel(Car source) {
+
+        Long yearManufactured = null;
+
+        if (source.getDateManufactured() != null) {
+            var calendar = new GregorianCalendar();
+
+            calendar.setTime(source.getDateManufactured());
+
+            yearManufactured = (long) calendar.get(Calendar.YEAR);
+        }
+
+        return new CarFetchResponse(
+                source.getId(),
+                source.getModel().getBrand().getName(),
+                source.getModel().getName(),
+                source.getTitle(),
+                yearManufactured,
+                source.getFuel().getName(),
+                source.getKilometers());
     }
 
     private CarModel projectToCarModel(Car source) {
