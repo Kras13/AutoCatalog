@@ -11,15 +11,6 @@ interface Car {
   kilometers?: number;
 }
 
-// "id": 22,
-//             "brand": "BMW",
-//             "model": "320D",
-//             "title": "BMW 320D",
-//             "price": 7500.0,
-//             "yearManufactured": 2006,
-//             "fuel": "Petrol",
-//             "kilometers": null
-
 interface PaginatedResponse {
   cars: Car[];
   totalPages: number;
@@ -79,8 +70,9 @@ function CarList() {
   }
 
   return (
-    <div className="container mt-4">
-      <>
+    <>
+      {cars.length === 0 && <h2>No cars</h2>}
+      <div className="container mt-4">
         <div className="row">
           {cars.map((car) => (
             <div key={car.id} className="col-md-4 mb-4">
@@ -107,7 +99,7 @@ function CarList() {
         </div>
         <div className="d-flex justify-content-center mt-4">
           <button
-            className="btn btn-secondary me-2"
+            className="btn btn-secondary"
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -117,15 +109,15 @@ function CarList() {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="btn btn-secondary ms-2"
+            className="btn btn-secondary"
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
             Next
           </button>
         </div>
-      </>
-    </div>
+      </div>
+    </>
   );
 }
 
