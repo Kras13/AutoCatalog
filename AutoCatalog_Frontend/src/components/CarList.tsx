@@ -25,7 +25,22 @@ interface Model {
   name: string;
 }
 
+interface Transmission {
+  id: number;
+  name: string;
+}
+
+interface Fuel {
+  id: number;
+  name: string;
+}
+
 interface Feature {
+  id: number;
+  name: string;
+}
+
+interface Category {
   id: number;
   name: string;
 }
@@ -40,6 +55,9 @@ function CarList() {
   const [cars, setCars] = useState<Car[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [models, setModels] = useState<Model[]>([]);
+  const [transmissions, setTransmissions] = useState<Transmission[]>([]);
+  const [fuels, setFuels] = useState<Fuel[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [features, setFeatures] = useState<Feature[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -48,10 +66,16 @@ function CarList() {
   const [pendingFilters, setPendingFilters] = useState({
     brandId: "all",
     modelId: "all",
+    transmissionId: "all",
+    fuelId: "all",
+    categoryId: "all",
   });
   const [appliedFilters, setAppliedFilters] = useState({
     brandId: "all",
     modelId: "all",
+    transmissionId: "all",
+    fuelId: "all",
+    categoryId: "all",
     features: [] as number[],
   });
 
@@ -69,6 +93,18 @@ function CarList() {
       queryParameters.append("modelId", appliedFilters.modelId);
     }
 
+    if (appliedFilters.transmissionId !== "all") {
+      queryParameters.append("transmissionId", appliedFilters.transmissionId);
+    }
+
+    if (appliedFilters.fuelId !== "all") {
+      queryParameters.append("fuelId", appliedFilters.fuelId);
+    }
+
+    if (appliedFilters.categoryId !== "all") {
+      queryParameters.append("categoryId", appliedFilters.categoryId);
+    }
+
     if (appliedFilters.features.length > 0) {
       queryParameters.append("features", appliedFilters.features.join(","));
     }
@@ -77,10 +113,13 @@ function CarList() {
       const response = await fetch(
         `http://localhost:8080/api/car/filter?${queryParameters.toString()}`
       );
+
       if (!response.ok) {
-        throw new Error("Failed to fetch cars");
+        throw new Error("Failed to fetch cars: " + response.text);
       }
+
       const data: PaginatedResponse = await response.json();
+
       setCars(data.cars);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -91,10 +130,13 @@ function CarList() {
   const fetchBrands = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/brand/fetch");
+
       if (!response.ok) {
         throw new Error("Failed to fetch brands");
       }
+
       const data: Brand[] = await response.json();
+
       setBrands(data);
     } catch (error) {
       console.error(error);
@@ -104,17 +146,74 @@ function CarList() {
   const fetchModels = async (brandId: string) => {
     if (brandId === "all") {
       setModels([]);
+
       return;
     }
     try {
       const response = await fetch(
         `http://localhost:8080/api/model/${brandId}`
       );
+
       if (!response.ok) {
         throw new Error("Failed to fetch models");
       }
+
       const data: Model[] = await response.json();
+
       setModels(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchTransmissions = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/transmission/fetch"
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch brands");
+      }
+
+      const data: Transmission[] = await response.json();
+
+      console.log("transmissions");
+      console.log(data);
+
+      setTransmissions(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchFuels = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/fuel/fetch");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch brands");
+      }
+
+      const data: Fuel[] = await response.json();
+
+      setFuels(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/category/fetch");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch brands");
+      }
+
+      const data: Category[] = await response.json();
+
+      setCategories(data);
     } catch (error) {
       console.error(error);
     }
@@ -139,11 +238,15 @@ function CarList() {
 
   useEffect(() => {
     fetchBrands();
+    fetchTransmissions();
+    fetchFuels();
+    fetchCategories();
     fetchFeatures();
   }, []);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
+
     setPendingFilters((prev) => ({
       ...prev,
       [name]: value,
@@ -163,6 +266,7 @@ function CarList() {
       ...pendingFilters,
       features: selectedFeatures,
     });
+
     setCurrentPage(1);
   };
 
@@ -170,7 +274,7 @@ function CarList() {
     <div className="container mt-4">
       <h2>Car Catalog</h2>
       <div className="row mb-3">
-        <div className="col-md-3">
+        <div className="col-md-3 mt-3">
           <label>Brand</label>
           <select
             className="form-select"
@@ -186,7 +290,7 @@ function CarList() {
             ))}
           </select>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-3 mt-3">
           <label>Model</label>
           <select
             className="form-select"
@@ -202,7 +306,55 @@ function CarList() {
             ))}
           </select>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-3 mt-3">
+          <label>Transmission</label>
+          <select
+            className="form-select"
+            name="transmissionId"
+            value={pendingFilters.transmissionId}
+            onChange={handleFilterChange}
+          >
+            <option value="all">All</option>
+            {transmissions.map((transmission) => (
+              <option key={transmission.id} value={transmission.id}>
+                {transmission.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-3 mt-3">
+          <label>Fuel</label>
+          <select
+            className="form-select"
+            name="fuelId"
+            value={pendingFilters.fuelId}
+            onChange={handleFilterChange}
+          >
+            <option value="all">All</option>
+            {fuels.map((fuel) => (
+              <option key={fuel.id} value={fuel.id}>
+                {fuel.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-3 mt-3">
+          <label>Category</label>
+          <select
+            className="form-select"
+            name="categoryId"
+            value={pendingFilters.categoryId}
+            onChange={handleFilterChange}
+          >
+            <option value="all">All</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-3 mt-3">
           <label>Features</label>
           <MultiSelect
             value={selectedFeatures}
@@ -226,7 +378,7 @@ function CarList() {
           </button>
         </div>
       </div>
-      <div className="row">
+      <div className="row" style={{ marginTop: "80px" }}>
         {cars.map((car) => (
           <div key={car.id} className="col-md-4 mb-4">
             <div className="card">
@@ -250,7 +402,10 @@ function CarList() {
           </div>
         ))}
       </div>
-      <div className="d-flex justify-content-center mt-4">
+      <div
+        className="d-flex justify-content-center mt-4"
+        style={{ marginTop: "24px" }}
+      >
         <button
           className="btn btn-secondary me-2"
           onClick={() => setCurrentPage(currentPage - 1)}
