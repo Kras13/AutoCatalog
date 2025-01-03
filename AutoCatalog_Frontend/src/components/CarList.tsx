@@ -414,12 +414,12 @@ function CarList() {
           Previous
         </button>
         <span>
-          Page {currentPage} of {totalPages}
+          Page {currentPage} of {totalPages < 1 ? 1 : totalPages}
         </span>
         <button
           className="btn btn-secondary ms-2"
           onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage >= totalPages}
         >
           Next
         </button>

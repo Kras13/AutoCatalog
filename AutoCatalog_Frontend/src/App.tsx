@@ -5,6 +5,7 @@ import CarDetails from "./components/CarDetails";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import { jwtDecode } from "jwt-decode";
+import CreateCar from "./components/CreateCar";
 
 function App() {
   const [username, setUsername] = useState<string | null>(null);
@@ -56,15 +57,9 @@ function App() {
             </ul>
             <ul className="nav justify-content-end">
               {username && (
-                <li
-                  className="nav-item"
-                  onClick={() => {
-                    localStorage.removeItem("jwtToken");
-                    setUsername(null);
-                  }}
-                >
-                  <Link className="nav-link" to="#">
-                    Log out
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Car/Add">
+                    Add car
                   </Link>
                 </li>
               )}
@@ -78,6 +73,21 @@ function App() {
                 </li>
               )}
             </ul>
+            <ul className="nav justify-content-end">
+              {username && (
+                <li
+                  className="nav-item"
+                  onClick={() => {
+                    localStorage.removeItem("jwtToken");
+                    setUsername(null);
+                  }}
+                >
+                  <Link className="nav-link" to="#">
+                    Log out
+                  </Link>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
       </nav>
@@ -86,6 +96,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<CarList />} />
         <Route path="/car/:carId" element={<CarDetails />} />
+        <Route path="/car/Add" element={<CreateCar />} />
       </Routes>
     </Router>
   );

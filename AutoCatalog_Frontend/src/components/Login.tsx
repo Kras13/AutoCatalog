@@ -43,7 +43,7 @@ const Login = () => {
       setMessage("Login successful!");
       localStorage.setItem("jwtToken", token);
 
-      navigate("/profile");
+      navigate("/");
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : "Unknown error occurred"
