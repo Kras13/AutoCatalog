@@ -1,6 +1,7 @@
 package org.nkp.autocatalog.repositories;
 
 import org.nkp.autocatalog.entities.Car;
+import org.nkp.autocatalog.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +35,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             List<Long> featureIds,
             java.sql.Date fromDate,
             java.sql.Date untilDate);
+
+    List<Car> findByUser(User user);
 }

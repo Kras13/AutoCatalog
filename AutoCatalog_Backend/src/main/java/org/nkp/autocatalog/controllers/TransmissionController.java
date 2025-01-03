@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transmission")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class TransmissionController {
     private final TransmissionService service;
 
@@ -29,6 +28,7 @@ public class TransmissionController {
         return service.getAll();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> createTransmission(
             @Valid @RequestBody TransmissionCreateModel model, BindingResult bindingResult) {

@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fuel")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class FuelController {
     private final FuelService service;
 
@@ -26,6 +25,7 @@ public class FuelController {
         return service.getAll();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> createFuel(
             @Valid @RequestBody FuelCreateModel model, BindingResult bindingResult) {

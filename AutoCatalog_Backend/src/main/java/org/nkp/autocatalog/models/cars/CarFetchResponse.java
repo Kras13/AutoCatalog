@@ -5,6 +5,7 @@ public class CarFetchResponse {
     private String brand;
     private String model;
     private String title;
+    private Double price;
     private Long yearManufactured;
     private String fuel;
     private Long kilometers;
@@ -13,11 +14,13 @@ public class CarFetchResponse {
     }
 
     public CarFetchResponse(
-            Long id, String brand, String model, String title, Long yearManufactured, String fuel, Long kilometers) {
+            Long id, String brand, String model, String title,
+            Double price, Long yearManufactured, String fuel, Long kilometers) {
         this.id = id;
         this.brand = brand;
         this.model = model;
         this.title = title;
+        this.price = price;
         this.yearManufactured = yearManufactured;
         this.fuel = fuel;
         this.kilometers = kilometers;
@@ -53,6 +56,14 @@ public class CarFetchResponse {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Long getYearManufactured() {

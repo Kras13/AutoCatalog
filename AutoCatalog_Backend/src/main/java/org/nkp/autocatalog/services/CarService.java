@@ -59,6 +59,18 @@ public class CarService {
                 .toList();
     }
 
+    public List<CarFetchResponse> getForUser() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var userDetails = (UserDetails)auth.getPrincipal();
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("User does not exist."));
+
+        return carRepository.findByUser(user)
+                .stream()
+                .map(this::projectToFetchModel)
+                .toList();
+    }
+
     public CarModel getById(Long id) {
         var car = carRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Car with such id was not found"));
@@ -98,11 +110,11 @@ public class CarService {
         java.sql.Date sqlDateManufactured;
 
         try {
-            dateManufactured = new SimpleDateFormat("dd/MM/yyyy").parse(input.getDateManufactured());
+            dateManufactured = new SimpleDateFormat("yyyy-MM-dd").parse(input.getDateManufactured());
             sqlDateManufactured = new java.sql.Date(dateManufactured.getTime());
         }
         catch (ParseException e) {
-            throw new DateTimeParseException("Provided date is not in 'dd/MM/yyyy' format");
+            throw new DateTimeParseException("Provided date is not in 'yyyy-MM-dd' format");
         }
 
         var features = featureRepository.findAllById(input.getFeatures());
@@ -197,21 +209,21 @@ public class CarService {
 
         try {
             if (request.getFromDate() != null) {
-                var fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(request.getFromDate());
+                var fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getFromDate());
 
                 sqlFromDate = new java.sql.Date(fromDate.getTime());
             }
 
 
             if (request.getUntilDate() != null) {
-                var untilDate = new SimpleDateFormat("dd/MM/yyyy").parse(request.getUntilDate());
+                var untilDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getUntilDate());
 
                 sqlUntilDate = new java.sql.Date(untilDate.getTime());
             }
 
         }
         catch (ParseException e) {
-            throw new DateTimeParseException("Dates must be in 'dd/MM/yyyy' format");
+            throw new DateTimeParseException("Dates must be in 'yyyy-MM-dd' format");
         }
 
         var cars = carRepository.filterCarPages(
@@ -250,6 +262,7 @@ public class CarService {
                 source.getModel().getBrand().getName(),
                 source.getModel().getName(),
                 source.getTitle(),
+                source.getPrice(),
                 yearManufactured,
                 source.getFuel().getName(),
                 source.getKilometers());

@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class CategoryController {
     private final CategoryService service;
 
@@ -27,6 +26,7 @@ public class CategoryController {
         return service.getAll();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> createCategory(
             @Valid @RequestBody CategoryCreateModel model, BindingResult bindingResult) {
@@ -38,6 +38,7 @@ public class CategoryController {
         return ResponseEntity.ok(service.create(model));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/edit")
     public ResponseEntity<?> editCategory(
             @Valid @RequestBody EditCategoryModel model, BindingResult bindingResult) {
@@ -49,6 +50,7 @@ public class CategoryController {
         return ResponseEntity.ok(service.edit(model));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(Long id) {
         return ResponseEntity.ok(service.deleteById(id));

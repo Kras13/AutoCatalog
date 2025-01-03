@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/brand")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class BrandController {
     private final BrandService service;
 
@@ -27,6 +26,7 @@ public class BrandController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createBrand(
             @Valid @RequestBody BrandCreateModel model, BindingResult bindingResult) {
 
