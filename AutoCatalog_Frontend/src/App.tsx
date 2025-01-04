@@ -6,6 +6,8 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import { jwtDecode } from "jwt-decode";
 import CreateCar from "./components/CreateCar";
+import UserCars from "./components/UserCars";
+import EditCar from "./components/EditCar";
 
 function App() {
   const [username, setUsername] = useState<string | null>(null);
@@ -13,13 +15,9 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
 
-    console.log(token);
-
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-
-        console.log(decoded);
 
         setUsername(decoded.sub || null);
       } catch (error) {
@@ -67,6 +65,15 @@ function App() {
             <ul className="nav justify-content-end">
               {username && (
                 <li className="nav-item">
+                  <Link className="nav-link" to="/my/cars">
+                    My cars
+                  </Link>
+                </li>
+              )}
+            </ul>
+            <ul className="nav justify-content-end">
+              {username && (
+                <li className="nav-item">
                   <Link className="nav-link" to="/profile">
                     {username}
                   </Link>
@@ -97,6 +104,8 @@ function App() {
         <Route path="/" element={<CarList />} />
         <Route path="/car/:carId" element={<CarDetails />} />
         <Route path="/car/Add" element={<CreateCar />} />
+        <Route path="/my/cars" element={<UserCars />} />
+        <Route path="/edit/car/:carId" element={<EditCar />} />
       </Routes>
     </Router>
   );

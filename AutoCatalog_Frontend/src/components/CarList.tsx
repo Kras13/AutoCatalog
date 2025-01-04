@@ -178,9 +178,6 @@ function CarList() {
 
       const data: Transmission[] = await response.json();
 
-      console.log("transmissions");
-      console.log(data);
-
       setTransmissions(data);
     } catch (error) {
       console.error(error);

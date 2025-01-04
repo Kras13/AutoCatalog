@@ -40,7 +40,6 @@ const Register = () => {
       const token = data.auth_token;
 
       setMessage("Registration successful! Token received.");
-      console.log("JWT Token:", token);
 
       localStorage.setItem("jwtToken", token);
     } catch (error) {
