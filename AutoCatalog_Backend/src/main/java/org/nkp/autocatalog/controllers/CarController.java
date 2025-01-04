@@ -52,13 +52,17 @@ public class CarController {
         return ResponseEntity.ok(service.handleRequest(model, CarRequestMode.CREATE));
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<?> editCar(
-            @Valid @RequestBody CarCreateModel model, BindingResult bindingResult) {
+            @Valid @RequestBody CarCreateModel model,
+            @PathVariable Long id,
+            BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return BaseController.FormatBadRequest(bindingResult);
         }
+
+        model.setId(id);
 
         return ResponseEntity.ok(service.handleRequest(model, CarRequestMode.EDIT));
     }

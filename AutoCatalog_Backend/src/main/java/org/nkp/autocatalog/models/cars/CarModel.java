@@ -1,6 +1,7 @@
 package org.nkp.autocatalog.models.cars;
 
 import org.nkp.autocatalog.models.Models.ModelResponse;
+import org.nkp.autocatalog.models.brands.BrandModel;
 import org.nkp.autocatalog.models.categories.CategoryModel;
 import org.nkp.autocatalog.models.features.FeatureModel;
 import org.nkp.autocatalog.models.fuels.FuelModel;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class CarModel {
     private Long id;
+    private BrandModel brand;
     private ModelResponse model;
     private String title;
     private String description;
@@ -26,6 +28,7 @@ public class CarModel {
 
     public CarModel(
             Long id,
+            BrandModel brand,
             ModelResponse model,
             String title,
             String description,
@@ -35,6 +38,7 @@ public class CarModel {
             FuelModel fuel,
             TransmissionModel transmission, List<FeatureModel> features) {
         this.id = id;
+        this.brand = brand;
         this.model = model;
         this.title = title;
         this.description = description;
@@ -44,6 +48,14 @@ public class CarModel {
         this.fuel = fuel;
         this.transmission = transmission;
         this.features = features;
+    }
+
+    public BrandModel getBrand() {
+        return brand;
+    }
+
+    public void setBrand(BrandModel brand) {
+        this.brand = brand;
     }
 
     public Long getId() {

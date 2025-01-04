@@ -281,6 +281,7 @@ public class CarService {
 
         return new CarModel(
                 source.getId(),
+                new BrandModel(carModel.getBrand().getId(), carModel.getBrand().getName()),
                 new ModelResponse(
                         carModel.getId(),
                         carModel.getName(),
