@@ -13,6 +13,7 @@ interface CarFeature {
 
 const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
   const [formData, setFormData] = useState({
+    id: carData.id || "",
     modelId: carData?.model.id || "",
     title: carData?.title || "",
     description: carData?.description || "",
@@ -110,6 +111,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
       );
       if (mode === "create") {
         setFormData({
+          id: "",
           modelId: "",
           title: "",
           description: "",

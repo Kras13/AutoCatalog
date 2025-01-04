@@ -41,7 +41,7 @@ const EditCar = () => {
     try {
       const token = localStorage.getItem("jwtToken");
       const response = await fetch(
-        `http://localhost:8080/api/car/${carId}/edit`,
+        `http://localhost:8080/api/car/edit/${carId}`,
         {
           method: "PUT",
           headers: {
