@@ -145,6 +145,7 @@ function CarList() {
 
   const fetchModels = async (brandId: string) => {
     if (brandId === "all") {
+      pendingFilters.modelId = "all";
       setModels([]);
 
       return;

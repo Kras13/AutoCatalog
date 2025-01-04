@@ -106,9 +106,6 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
     try {
       await onSubmit(formData);
 
-      setMessage(
-        `${mode === "create" ? "Car created" : "Car updated"} successfully!`
-      );
       if (mode === "create") {
         setFormData({
           id: "",
