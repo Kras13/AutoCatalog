@@ -25,6 +25,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
     transmissionId: carData?.transmission.id || "",
     features:
       carData?.features?.map((feature: { id: number }) => feature.id) || [],
+    image: carData?.image || "",
   });
 
   const [brands, setBrands] = useState([]);
@@ -99,6 +100,23 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
     setFormData((prev) => ({ ...prev, features: selectedValues }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setFormData((prev) => ({
+          ...prev,
+          image: reader.result as string,
+        }));
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -120,6 +138,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           fuelId: "",
           transmissionId: "",
           features: [],
+          image: "",
         });
       }
     } catch (error) {
@@ -316,6 +335,19 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
             value={formData.dateManufactured}
             onChange={handleInputChange}
             required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="image" className="form-label">
+            Upload Image
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="image"
+            onChange={handleImageChange}
+            accept="image/*"
           />
         </div>
 
