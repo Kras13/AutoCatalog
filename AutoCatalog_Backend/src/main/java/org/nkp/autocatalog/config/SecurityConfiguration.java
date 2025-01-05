@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         "/api/car/fetch", "/api/brand/fetch",
         "/api/model/{id}", "/api/category/fetch",
         "/api/fuel/fetch", "/api/transmission/fetch",
-        "/api/feature/fetch"
+        "/api/feature/fetch", "/api/car/{id}"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

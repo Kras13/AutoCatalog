@@ -12,6 +12,7 @@ import org.nkp.autocatalog.models.categories.CategoryModel;
 import org.nkp.autocatalog.models.features.FeatureModel;
 import org.nkp.autocatalog.models.fuels.FuelModel;
 import org.nkp.autocatalog.models.transmissions.TransmissionModel;
+import org.nkp.autocatalog.models.users.UserModel;
 import org.nkp.autocatalog.repositories.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -289,10 +290,14 @@ public class CarService {
                 source.getTitle(),
                 source.getDescription(),
                 source.getPrice(),
+                source.getKilometers(),
                 source.getDateManufactured(),
                 new CategoryModel(category.getId(), category.getName()),
                 new FuelModel(fuel.getId(), fuel.getName()),
                 new TransmissionModel(transmission.getId(), transmission.getName()),
+                new UserModel(
+                        source.getUser().getFirstName(), source.getUser().getLastName(),
+                        source.getUser().getPhoneNumber()),
                 features);
     }
 }

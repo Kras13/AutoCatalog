@@ -6,6 +6,7 @@ import org.nkp.autocatalog.models.categories.CategoryModel;
 import org.nkp.autocatalog.models.features.FeatureModel;
 import org.nkp.autocatalog.models.fuels.FuelModel;
 import org.nkp.autocatalog.models.transmissions.TransmissionModel;
+import org.nkp.autocatalog.models.users.UserModel;
 
 import java.util.Date;
 import java.util.List;
@@ -17,10 +18,12 @@ public class CarModel {
     private String title;
     private String description;
     private Double price;
+    private Long kilometers;
     private Date dateManufactured;
     private CategoryModel category;
     private FuelModel fuel;
     private TransmissionModel transmission;
+    private UserModel user;
     private List<FeatureModel> features;
 
     public CarModel() {
@@ -33,20 +36,24 @@ public class CarModel {
             String title,
             String description,
             Double price,
-            Date dateManufactured,
+            Long kilometers, Date dateManufactured,
             CategoryModel category,
             FuelModel fuel,
-            TransmissionModel transmission, List<FeatureModel> features) {
+            TransmissionModel transmission,
+            UserModel user,
+            List<FeatureModel> features) {
         this.id = id;
         this.brand = brand;
         this.model = model;
         this.title = title;
         this.description = description;
         this.price = price;
+        this.kilometers = kilometers;
         this.dateManufactured = dateManufactured;
         this.category = category;
         this.fuel = fuel;
         this.transmission = transmission;
+        this.user = user;
         this.features = features;
     }
 
@@ -98,6 +105,14 @@ public class CarModel {
         this.price = price;
     }
 
+    public Long getKilometers() {
+        return kilometers;
+    }
+
+    public void setKilometers(Long kilometers) {
+        this.kilometers = kilometers;
+    }
+
     public Date getDateManufactured() {
         return dateManufactured;
     }
@@ -136,5 +151,13 @@ public class CarModel {
 
     public void setFeatures(List<FeatureModel> features) {
         this.features = features;
+    }
+
+    public UserModel getUser() {
+        return user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 }

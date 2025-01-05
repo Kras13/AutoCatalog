@@ -3,13 +3,15 @@ package org.nkp.autocatalog.models.users;
 public class UserModel {
     private String firstName;
     private String lastName;
+    private String phoneNumber;
 
     public UserModel() {
     }
 
-    public UserModel(String firstName, String lastName) {
+    public UserModel(String firstName, String lastName, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFirstName() {
@@ -26,5 +28,13 @@ public class UserModel {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
