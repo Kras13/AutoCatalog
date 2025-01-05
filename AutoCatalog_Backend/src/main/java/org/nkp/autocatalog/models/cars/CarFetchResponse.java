@@ -9,13 +9,14 @@ public class CarFetchResponse {
     private Long yearManufactured;
     private String fuel;
     private Long kilometers;
+    private String image;
 
     public CarFetchResponse() {
     }
 
     public CarFetchResponse(
             Long id, String brand, String model, String title,
-            Double price, Long yearManufactured, String fuel, Long kilometers) {
+            Double price, Long yearManufactured, String fuel, Long kilometers, String image) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -24,6 +25,7 @@ public class CarFetchResponse {
         this.yearManufactured = yearManufactured;
         this.fuel = fuel;
         this.kilometers = kilometers;
+        this.image = image;
     }
 
     public Long getId() {
@@ -88,5 +90,13 @@ public class CarFetchResponse {
 
     public void setKilometers(Long kilometers) {
         this.kilometers = kilometers;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -123,6 +123,11 @@ public class CarService {
         if (features.size() != input.getFeatures().size())
             throw new EntityNotFoundException("Feature entity not found");
 
+        String image = null;
+
+        if (input.getImage() != null && input.getImage().length() != 0)
+            image = input.getImage();
+
         if (mode == CarRequestMode.CREATE) {
             var car = new Car(
                     input.getTitle(),
@@ -130,6 +135,7 @@ public class CarService {
                     input.getPrice(),
                     sqlDateManufactured,
                     input.getKilometers(),
+                    image,
                     model.get(),
                     category.get(),
                     fuel.get(),
@@ -159,7 +165,9 @@ public class CarService {
                     transmission.get(),
                     input.getPrice(),
                     input.getTitle(),
-                    input.getDescription());
+                    input.getDescription(),
+                    input.getKilometers(),
+                    image);
 
             return projectToCarModel(editedCar);
         }
@@ -174,7 +182,9 @@ public class CarService {
             Transmission transmission,
             double price,
             String title,
-            String description) {
+            String description,
+            Long kilometers,
+            String image) {
 
         car.setModel(model);
         car.setCategory(category);
@@ -183,6 +193,8 @@ public class CarService {
         car.setPrice(price);
         car.setTitle(title);
         car.setDescription(description);
+        car.setKilometers(kilometers);
+        car.setImage(image);
 
         carFeatureRepository.deleteAllByCarId(car.getId());
 
@@ -266,7 +278,8 @@ public class CarService {
                 source.getPrice(),
                 yearManufactured,
                 source.getFuel().getName(),
-                source.getKilometers());
+                source.getKilometers(),
+                source.getImage());
     }
 
     private CarModel projectToCarModel(Car source) {

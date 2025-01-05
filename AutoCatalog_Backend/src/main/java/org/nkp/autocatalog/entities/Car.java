@@ -29,6 +29,10 @@ public class Car {
     @Column(name = "kilometers")
     private Long kilometers;
 
+    @Column(name = "image", columnDefinition = "TEXT")
+    @Lob
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "model_id")
     @JsonBackReference
@@ -66,6 +70,7 @@ public class Car {
             Double price,
             Date dateManufactured,
             Long kilometers,
+            String image,
             Model model,
             Category category,
             Fuel fuel,
@@ -76,6 +81,7 @@ public class Car {
         this.price = price;
         this.dateManufactured = dateManufactured;
         this.kilometers = kilometers;
+        this.image = image;
         this.model = model;
         this.category = category;
         this.fuel = fuel;
@@ -177,5 +183,13 @@ public class Car {
 
     public void setKilometers(Long kilometers) {
         this.kilometers = kilometers;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

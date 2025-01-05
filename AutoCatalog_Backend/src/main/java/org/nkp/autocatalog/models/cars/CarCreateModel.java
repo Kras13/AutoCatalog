@@ -17,6 +17,7 @@ public class CarCreateModel {
 
     private String dateManufactured;
     private Long kilometers;
+    private String image;
     private Long categoryId;
     private Long fuelId;
     private Long transmissionId;
@@ -33,6 +34,7 @@ public class CarCreateModel {
             double price,
             String dateManufactured,
             Long kilometers,
+            String image,
             Long categoryId,
             Long fuelId,
             Long transmissionId, List<Long> features) {
@@ -43,6 +45,7 @@ public class CarCreateModel {
         this.price = price;
         this.dateManufactured = dateManufactured;
         this.kilometers = kilometers;
+        this.image = image;
         this.categoryId = categoryId;
         this.fuelId = fuelId;
         this.transmissionId = transmissionId;
@@ -135,5 +138,13 @@ public class CarCreateModel {
 
     public void setKilometers(Long kilometers) {
         this.kilometers = kilometers;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
