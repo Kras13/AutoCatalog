@@ -13,11 +13,12 @@ interface CarFeature {
 
 const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
   const [formData, setFormData] = useState({
-    id: carData.id || "",
+    id: carData?.id || "",
     modelId: carData?.model.id || "",
     title: carData?.title || "",
     description: carData?.description || "",
     price: carData?.price || "",
+    kilometers: carData?.kilometers || "",
     dateManufactured: carData?.dateManufactured || "",
     categoryId: carData?.category.id || "",
     fuelId: carData?.fuel.id || "",
@@ -113,6 +114,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           title: "",
           description: "",
           price: "",
+          kilometers: "",
           dateManufactured: "",
           categoryId: "",
           fuelId: "",
@@ -282,6 +284,21 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
             id="price"
             name="price"
             value={formData.price}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        <div className="col-md-6 mb-3">
+          <label htmlFor="price" className="form-label">
+            Kilometers
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            id="kilometers"
+            name="kilometers"
+            value={formData.kilometers}
             onChange={handleInputChange}
             required
           />

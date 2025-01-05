@@ -1,52 +1,153 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-interface Car {
+interface Brand {
   id: number;
-  imageUrl: string;
-  price: number;
-  description: string;
-  userName: string;
-  phone: string;
+  name: string;
 }
 
-const CarDetails: React.FC = () => {
+interface Model {
+  id: number;
+  name: string;
+}
+
+interface Feature {
+  id: number;
+  name: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface Fuel {
+  id: number;
+  name: string;
+}
+
+interface Transmission {
+  id: number;
+  name: string;
+}
+
+interface Userinfo {
+  firstName: String;
+  lastName: String;
+  phoneNumber: String;
+}
+
+interface CarDetailsData {
+  brand: Brand;
+  model: Model;
+  title: string;
+  description: string;
+  price: number;
+  dateManufactured: string;
+  category: Category;
+  fuel: Fuel;
+  transmission: Transmission;
+  features: Feature[];
+  kilometers: number;
+  user: Userinfo;
+}
+
+const CarDetails = () => {
   const { carId } = useParams<{ carId: string }>();
-  const [car, setCar] = useState<Car | null>(null);
+  const [carDetails, setCarDetails] = useState<CarDetailsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCarDetails = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/car/${carId}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch car details.");
+      }
+
+      const data: CarDetailsData = await response.json();
+
+      setCarDetails(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCarDetails = async () => {
-      const carData: Car = {
-        id: parseInt(carId || "0"),
-        imageUrl: "https://via.placeholder.com/400",
-        price: 15000,
-        description: "A detailed description of the car...",
-        userName: "John Doe",
-        phone: "123-456-7890",
-      };
-      setCar(carData);
-    };
+    console.log(carId);
 
-    fetchCarDetails();
+    if (carId) {
+      fetchCarDetails();
+    }
   }, [carId]);
 
-  if (!car) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <div>Loading car details...</div>;
+  }
+
+  if (error) {
+    return <div className="alert alert-danger">{error}</div>;
+  }
+
+  if (!carDetails) {
+    return <div>No car details available.</div>;
   }
 
   return (
     <div className="container mt-4">
-      <div className="row">
-        <div className="col-md-6">
-          <img src={car.imageUrl} alt="Car" className="img-fluid" />
-        </div>
-        <div className="col-md-6">
-          <h2>Price: ${car.price}</h2>
-          <h4>Description:</h4>
-          <p>{car.description}</p>
-          <h4>Contact:</h4>
-          <p>Name: {car.userName}</p>
-          <p>Phone: {car.phone}</p>
+      <h2>Car Details</h2>
+
+      <div className="card">
+        <div className="card-body">
+          <h5 className="card-title">{carDetails.title}</h5>
+          <h6 className="card-subtitle mb-2 text-muted">
+            Brand: {carDetails.brand.name}
+          </h6>
+          <h6 className="card-subtitle mb-2 text-muted">
+            Model: {carDetails.model.name}
+          </h6>
+          <p className="card-text">
+            <strong>Description:</strong> {carDetails.description}
+          </p>
+          <p className="card-text">
+            <strong>Name:</strong> {carDetails.user.firstName}{" "}
+            {carDetails.user.lastName}
+          </p>
+          <p className="card-text">
+            <strong>Phone number:</strong> {carDetails.user.phoneNumber}
+          </p>
+          <p className="card-text">
+            <strong>Price:</strong> {carDetails.price} lv.
+          </p>
+          <p className="card-text">
+            <strong>Kilometers:</strong> {carDetails.kilometers}
+          </p>
+          <p className="card-text">
+            <strong>Date manufactured:</strong> {carDetails.dateManufactured}
+          </p>
+          <p className="card-text">
+            <strong>Category:</strong> {carDetails.category.name}
+          </p>
+          <p className="card-text">
+            <strong>Fuel:</strong> {carDetails.fuel.name}
+          </p>
+          <p className="card-text">
+            <strong>Transmission:</strong> {carDetails.transmission.name}
+          </p>
+          <div>
+            <strong>Features:</strong>
+            <ul>
+              {carDetails.features.map((feature) => (
+                <li key={feature.id}>{feature.name}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
