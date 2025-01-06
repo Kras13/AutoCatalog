@@ -24,7 +24,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             "(:categoryId IS NULL OR c.category.id = :categoryId) AND " +
             "(:featureIds IS NULL OR cf.feature.id IN :featureIds) AND " +
             "(cast(:fromDate as date) IS NULL OR c.dateManufactured >= :fromDate) AND " +
-            "(cast(:untilDate as date) IS NULL OR c.dateManufactured <= :untilDate)")
+            "(cast(:untilDate as date) IS NULL OR c.dateManufactured <= :untilDate) " +
+            "order by c.id")
     Page<Car> filterCarPages(
             Pageable pageable,
             Long brandId,
@@ -37,4 +38,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             java.sql.Date untilDate);
 
     List<Car> findByUser(User user);
+
+    List<Car> findAllByOrderByIdAsc();
 }

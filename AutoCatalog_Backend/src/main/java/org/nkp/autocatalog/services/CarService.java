@@ -311,6 +311,7 @@ public class CarService {
                 new UserModel(
                         source.getUser().getFirstName(), source.getUser().getLastName(),
                         source.getUser().getPhoneNumber()),
-                features);
+                features,
+                source.getImage());
     }
 }

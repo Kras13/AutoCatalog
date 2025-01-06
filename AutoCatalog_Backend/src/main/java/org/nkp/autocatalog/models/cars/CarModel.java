@@ -25,6 +25,7 @@ public class CarModel {
     private TransmissionModel transmission;
     private UserModel user;
     private List<FeatureModel> features;
+    private String image;
 
     public CarModel() {
     }
@@ -41,7 +42,7 @@ public class CarModel {
             FuelModel fuel,
             TransmissionModel transmission,
             UserModel user,
-            List<FeatureModel> features) {
+            List<FeatureModel> features, String image) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -55,6 +56,7 @@ public class CarModel {
         this.transmission = transmission;
         this.user = user;
         this.features = features;
+        this.image = image;
     }
 
     public BrandModel getBrand() {
@@ -159,5 +161,13 @@ public class CarModel {
 
     public void setUser(UserModel user) {
         this.user = user;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
