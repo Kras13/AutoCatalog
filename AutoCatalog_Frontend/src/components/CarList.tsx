@@ -4,6 +4,8 @@ import { MultiSelect } from "primereact/multiselect";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
+import carPlaceholder from "../assets/carPlaceholder.png";
+import "../App.css";
 
 interface Car {
   id: number;
@@ -12,7 +14,7 @@ interface Car {
   yearManufactured: number;
   fuel: string;
   kilometers: number;
-  imageUrl?: string;
+  image: string;
 }
 
 interface Brand {
@@ -382,7 +384,7 @@ function CarList() {
             <div className="card">
               <img
                 className="card-img-top"
-                src={car.imageUrl || "placeholder.jpg"}
+                src={car.image || carPlaceholder}
                 alt={`Image of ${car.title}`}
               />
               <div className="card-body">

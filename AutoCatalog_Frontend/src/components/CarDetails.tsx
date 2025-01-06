@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import carPlaceholder from "../assets/carPlaceholder.png";
+import "../App.css";
 
 interface Brand {
   id: number;
@@ -50,6 +52,7 @@ interface CarDetailsData {
   features: Feature[];
   kilometers: number;
   user: Userinfo;
+  image: string;
 }
 
 const CarDetails = () => {
@@ -102,52 +105,63 @@ const CarDetails = () => {
   return (
     <div className="container mt-4">
       <h2>Car Details</h2>
-
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">{carDetails.title}</h5>
-          <h6 className="card-subtitle mb-2 text-muted">
-            Brand: {carDetails.brand.name}
-          </h6>
-          <h6 className="card-subtitle mb-2 text-muted">
-            Model: {carDetails.model.name}
-          </h6>
-          <p className="card-text">
-            <strong>Description:</strong> {carDetails.description}
-          </p>
-          <p className="card-text">
-            <strong>Name:</strong> {carDetails.user.firstName}{" "}
-            {carDetails.user.lastName}
-          </p>
-          <p className="card-text">
-            <strong>Phone number:</strong> {carDetails.user.phoneNumber}
-          </p>
-          <p className="card-text">
-            <strong>Price:</strong> {carDetails.price} lv.
-          </p>
-          <p className="card-text">
-            <strong>Kilometers:</strong> {carDetails.kilometers}
-          </p>
-          <p className="card-text">
-            <strong>Date manufactured:</strong> {carDetails.dateManufactured}
-          </p>
-          <p className="card-text">
-            <strong>Category:</strong> {carDetails.category.name}
-          </p>
-          <p className="card-text">
-            <strong>Fuel:</strong> {carDetails.fuel.name}
-          </p>
-          <p className="card-text">
-            <strong>Transmission:</strong> {carDetails.transmission.name}
-          </p>
-          <div>
-            <strong>Features:</strong>
-            <ul>
-              {carDetails.features.map((feature) => (
-                <li key={feature.id}>{feature.name}</li>
-              ))}
-            </ul>
+      <div className="row">
+        <div className="col-sm-6">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">{carDetails.title}</h5>
+              <h6 className="card-subtitle mb-2 text-muted">
+                Brand: {carDetails.brand.name}
+              </h6>
+              <h6 className="card-subtitle mb-2 text-muted">
+                Model: {carDetails.model.name}
+              </h6>
+              <p className="card-text">
+                <strong>Description:</strong> {carDetails.description}
+              </p>
+              <p className="card-text">
+                <strong>Name:</strong> {carDetails.user.firstName}{" "}
+                {carDetails.user.lastName}
+              </p>
+              <p className="card-text">
+                <strong>Phone number:</strong> {carDetails.user.phoneNumber}
+              </p>
+              <p className="card-text">
+                <strong>Price:</strong> {carDetails.price} lv.
+              </p>
+              <p className="card-text">
+                <strong>Kilometers:</strong> {carDetails.kilometers}
+              </p>
+              <p className="card-text">
+                <strong>Date manufactured:</strong>{" "}
+                {carDetails.dateManufactured}
+              </p>
+              <p className="card-text">
+                <strong>Category:</strong> {carDetails.category.name}
+              </p>
+              <p className="card-text">
+                <strong>Fuel:</strong> {carDetails.fuel.name}
+              </p>
+              <p className="card-text">
+                <strong>Transmission:</strong> {carDetails.transmission.name}
+              </p>
+              <div>
+                <strong>Features:</strong>
+                <ul>
+                  {carDetails.features.map((feature) => (
+                    <li key={feature.id}>{feature.name}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+        <div className="col-sm-6">
+          <img
+            className="card-img-top"
+            src={carDetails.image || carPlaceholder}
+            alt={`Image of ${carDetails.title}`}
+          />
         </div>
       </div>
     </div>
