@@ -4,6 +4,14 @@ public class BrandModel {
     private Long id;
     private String name;
 
+    public BrandModel() {
+    }
+
+    public BrandModel(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
@@ -17,11 +25,6 @@ public class BrandModel {
     }
 
     public void setName(String name) {
-        this.name = name;
-    }
-
-    public BrandModel(Long id, String name) {
-        this.id = id;
         this.name = name;
     }
 
