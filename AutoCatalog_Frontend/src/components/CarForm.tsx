@@ -163,7 +163,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
+        <div className="col-md-6 mb-3">
           <label>Brand</label>
           <select
             className="form-select"
@@ -198,7 +198,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           </select>
         </div>
 
-        <div className="col-md-3 mt-3">
+        <div className="col-md-6 mt-3">
           <label>Category</label>
           <select
             className="form-select"
@@ -215,7 +215,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           </select>
         </div>
 
-        <div className="col-md-3 mt-3">
+        <div className="col-md-6 mt-3">
           <label>Fuel</label>
           <select
             className="form-select"
@@ -232,7 +232,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           </select>
         </div>
 
-        <div className="col-md-3 mt-3">
+        <div className="col-md-6 mt-3">
           <label>Transmission</label>
           <select
             className="form-select"
@@ -249,7 +249,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           </select>
         </div>
 
-        <div className="mb-3">
+        <div className="col-md-6 mb-3">
           <label htmlFor="features" className="form-label">
             Features
           </label>
@@ -338,7 +338,7 @@ const CarForm = ({ mode, carData, onSubmit }: CarFormProps) => {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="col-md-6 mb-3">
           <label htmlFor="image" className="form-label">
             Upload Image
           </label>

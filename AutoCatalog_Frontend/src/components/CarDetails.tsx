@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import carPlaceholder from "../assets/carPlaceholder.png";
-import "../App.css";
 
 interface Brand {
   id: number;
@@ -158,7 +157,7 @@ const CarDetails = () => {
         </div>
         <div className="col-sm-6">
           <img
-            className="card-img-top"
+            className="card-img"
             src={carDetails.image || carPlaceholder}
             alt={`Image of ${carDetails.title}`}
           />
