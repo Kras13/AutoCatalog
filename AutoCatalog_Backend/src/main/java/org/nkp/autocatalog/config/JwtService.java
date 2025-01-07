@@ -51,7 +51,7 @@ public class JwtService {
             Map<String, Object> extraClaims, UserDetails userDetails
     ) {
         Date issuedAt = new Date(System.currentTimeMillis());
-        Date expireAt = new Date(System.currentTimeMillis() + 1000 * 60 * 24);
+        Date expireAt = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 3);
 
         return Jwts
                 .builder()

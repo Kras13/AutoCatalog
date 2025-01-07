@@ -33,7 +33,7 @@ public class AuthenticationService {
                 request.getEmail(),
                 request.getPhoneNumber(),
                 passwordEncoder.encode(request.getPassword()),
-                Role.ADMIN);
+                Role.USER);
 
         repository.save(user);
 

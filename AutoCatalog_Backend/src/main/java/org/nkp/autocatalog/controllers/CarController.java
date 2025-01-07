@@ -29,9 +29,9 @@ public class CarController {
     public CarFilterResponse filterCars(
             CarFilterRequest request,
             @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "3") int perPage) {
+            @RequestParam(defaultValue = "3") int elementsPerPage) {
 
-        Pageable pageable = PageRequest.of(currentPage - 1, perPage);
+        Pageable pageable = PageRequest.of(currentPage - 1, elementsPerPage);
 
         return service.getFiltered(request, pageable);
     }
