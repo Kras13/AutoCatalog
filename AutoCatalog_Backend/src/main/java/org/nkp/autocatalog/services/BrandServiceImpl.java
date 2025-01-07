@@ -5,16 +5,17 @@ import org.nkp.autocatalog.exceptions.EntityAlreadyExistsException;
 import org.nkp.autocatalog.models.brands.BrandCreateModel;
 import org.nkp.autocatalog.models.brands.BrandModel;
 import org.nkp.autocatalog.repositories.BrandRepository;
+import org.nkp.autocatalog.services.contracts.BrandService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 
 @Service
-public class BrandService {
+public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
 
-    public BrandService(BrandRepository brandRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository) {
         this.brandRepository = brandRepository;
     }
 
@@ -35,5 +36,4 @@ public class BrandService {
                 .map(c -> new BrandModel(c.getId(), c.getName()))
                 .toList();
     }
-
 }

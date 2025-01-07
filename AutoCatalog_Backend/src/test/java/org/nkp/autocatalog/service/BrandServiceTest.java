@@ -10,7 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.nkp.autocatalog.entities.Brand;
 import org.nkp.autocatalog.models.brands.BrandCreateModel;
 import org.nkp.autocatalog.repositories.BrandRepository;
-import org.nkp.autocatalog.services.BrandService;
+import org.nkp.autocatalog.services.BrandServiceImpl;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +21,7 @@ public class BrandServiceTest {
     private BrandRepository brandRepository;
 
     @InjectMocks
-    private BrandService brandService;
+    private BrandServiceImpl brandService;
 
     @Test
     public void BrandService_CreateBrand_ReturnBrandModel() {
