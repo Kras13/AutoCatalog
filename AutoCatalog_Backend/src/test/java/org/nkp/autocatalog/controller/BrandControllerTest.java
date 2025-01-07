@@ -19,6 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -48,7 +52,7 @@ public class BrandControllerTest {
 
     @Test
     public void BrandController_CreateBrand_ReturnCreated() throws Exception {
-        when(brandService.create(createModel)).thenReturn(brandModel);
+        when(brandService.create(any(BrandCreateModel.class))).thenReturn(brandModel);
 
         var response = mockMvc.perform(
                 post("/api/brand/create")
@@ -56,6 +60,22 @@ public class BrandControllerTest {
                         .content(objectMapper.writeValueAsString(createModel)));
 
         response
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(brandModel.getName())));
+    }
+
+    @Test
+    public void BrandController_Fetch_ReturnBrandModel() throws Exception {
+        var models = List.of(brandModel, brandModel, brandModel);
+
+        when(brandService.getAll()).thenReturn(models);
+
+        var response = mockMvc.perform(
+                get("/api/brand/fetch")
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(models.size())));
     }
 }
