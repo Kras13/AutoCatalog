@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-const Login = () => {
+interface Props {
+  onLogin: (username: string) => void;
+}
+
+const Login = ({ onLogin }: Props) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,17 +37,30 @@ const Login = () => {
         }
       );
 
+      console.log(response);
+
+      if (response.status === 400) {
+        setMessage("User with such credentials does not exist");
+        return;
+      }
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
       }
 
+      console.log(response.status);
+
       const data = await response.json();
+
       const token = data.auth_token;
+      const decoded: any = jwtDecode(token);
+      const username = decoded.sub;
 
       setMessage("Login successful!");
       localStorage.setItem("jwtToken", token);
 
+      onLogin(username);
       navigate("/");
     } catch (error) {
       setMessage(

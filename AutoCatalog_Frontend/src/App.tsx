@@ -29,6 +29,10 @@ function App() {
     }
   }, []);
 
+  const handleLogin = (username: string) => {
+    setUsername(username);
+  };
+
   return (
     <Router>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -100,7 +104,7 @@ function App() {
       </nav>
       <Routes>
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/" element={<CarList />} />
         <Route path="/car/:carId" element={<CarDetails />} />
         <Route path="/car/Add" element={<CreateCar />} />
