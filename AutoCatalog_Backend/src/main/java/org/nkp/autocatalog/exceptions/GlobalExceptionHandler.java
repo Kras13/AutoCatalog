@@ -35,4 +35,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(UnauthorizedDeleteException.class)
+    public ResponseEntity<String> handleUnauthorizedDeleteException(UnauthorizedDeleteException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(exception.getMessage());
+    }
 }

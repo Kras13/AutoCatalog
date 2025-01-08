@@ -66,4 +66,9 @@ public class CarController {
 
         return ResponseEntity.ok(service.handleRequest(model, CarRequestMode.EDIT));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteCar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.delete(id));
+    }
 }

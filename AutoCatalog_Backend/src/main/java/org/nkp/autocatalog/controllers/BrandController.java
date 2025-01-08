@@ -3,7 +3,6 @@ package org.nkp.autocatalog.controllers;
 import jakarta.validation.Valid;
 import org.nkp.autocatalog.models.brands.BrandCreateModel;
 import org.nkp.autocatalog.models.brands.BrandModel;
-import org.nkp.autocatalog.services.BrandServiceImpl;
 import org.nkp.autocatalog.services.contracts.BrandService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -173,6 +173,24 @@ public class CarService {
         }
     }
 
+    public Boolean delete(Long carId) {
+        var car = carRepository.findById(carId)
+                .orElseThrow(() -> new EntityNotFoundException("Car with such id was not found"));
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var userDetails = (UserDetails)auth.getPrincipal();
+        var user = userRepository.findByEmail(userDetails.getUsername());
+
+        if (!car.getUser().getId().equals(user.get().getId())) {
+            throw new UnauthorizedEditException("Unauthorized car edit");
+        }
+
+        carFeatureRepository.deleteAllByCarId(car.getId());
+        carRepository.delete(car);
+
+        return true;
+    }
+
     public Car editCarInternal(
             Car car,
             List<Feature> features,
