@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { InputText } from "primereact/inputtext";
 
 interface Props {
   onLogin: (username: string) => void;
@@ -14,14 +15,49 @@ const Login = ({ onLogin }: Props) => {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [validationErrors, setValidationError] = useState({
+    email: "",
+    password: "",
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    invalidateState(name, value);
+  };
+
+  const invalidateState = (propName: String, propValue: String) => {
+    var hasErrors = false;
+
+    if (propName === "email" && propValue === "") {
+      hasErrors = true;
+      // todo use nameof alternative in TS
+      setValidationError((prev) => ({
+        ...prev,
+        email: "Please fill with a non empty email value",
+      }));
+    } else {
+      setValidationError((prev) => ({
+        ...prev,
+        email: "",
+      }));
+    }
+
+    return hasErrors;
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    var hasErrors = invalidateState("email", formData.email);
+
+    if (hasErrors) {
+      console.log("Validation errors found");
+
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
 
@@ -95,8 +131,10 @@ const Login = ({ onLogin }: Props) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
           />
+          {validationErrors.email !== "" && (
+            <span className="text-danger">{validationErrors.email}</span>
+          )}
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
@@ -109,7 +147,6 @@ const Login = ({ onLogin }: Props) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            required
           />
         </div>
         <button type="submit" className="btn btn-primary" disabled={loading}>
